@@ -29,6 +29,8 @@ import picocli.CommandLine.Parameters;
         """)
 class jdbc implements Callable<Integer> {
 
+    final String JDBCSERVERALIAS = "io.quarkus.mcp:mcp-server-jdbc:1.0.0-SNAPSHOT:runner";
+    
     @Parameters(index = "0", arity = "0..1", description = "JDBC url to connect to. Defaults to in-memory h2 database", defaultValue = "jdbc:h2:mem:test")
     String jdbcurl;
 
@@ -101,7 +103,7 @@ class jdbc implements Callable<Integer> {
 
         
         
-        command.add("io.quarkus.mcp:mcp-server-jdbc:1.0.0-SNAPSHOT:runner");
+        command.add(JDBCSERVERALIAS);
 
         if (!additionalArgs.isEmpty()) {
             command.addAll(additionalArgs);

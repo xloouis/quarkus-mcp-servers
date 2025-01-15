@@ -57,21 +57,23 @@ Below are a non-exhaustive list of databases and example JDBC urls that are know
 
 === Example databases 
 
-|===
-|Description |JDBC URL
-
-|Chinook database - Sample music store data including artists, albums, tracks, invoices etc.
-a|
+Chinook database - Sample music store data including artists, albums, tracks, invoices etc.::
 [source]
 ----
 jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
 ----
-|Northwind database - Classic Microsoft sample database with customers, orders, products etc.
-|jdbc:sqlite:%{https://github.com/jpwhite3/northwind-SQLite3/raw/refs/heads/main/dist/northwind.db}
 
-|Netflix Movies database - Sample movie data based on Netflix catalog
-|jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netflixdb.sqlite}
-|===
+Northwind database - Classic Microsoft sample database with customers, orders, products etc.::
+[source]
+----
+jdbc:sqlite:%{https://github.com/jpwhite3/northwind-SQLite3/raw/refs/heads/main/dist/northwind.db}
+----
+
+Netflix Movies database - Sample movie data based on Netflix catalog::
+[source]
+----
+jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netflixdb.sqlite}
+----
 
 == Components
 
@@ -87,96 +89,51 @@ jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookData
 
 * *jdbc_demo* - example prompt to get started exploring the server (similar to the one in sqllite MCP)
 
-== General usage
+== Claude Desktop Config and https://github.com/chrishayuk/mcp-cli[mcp-cli]
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Add this to your `claude_desktop.json` or `server_config.json` file:
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/
-
-== Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-
-[source,shell]
+[source,json]
 ----
-./mvnw compile quarkus:dev
-----
-
-[NOTE]
-====
-Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/
-====
-
-== Packaging and running the application
-
-The application can be packaged using:
-
-[source,shell]
-----
-./mvnw package
+{
+  "mcpServers": {
+    "jdbc": {
+      "command": "jbang",
+      "args": [
+        "--quiet",
+        "{jdbcalias}",
+        "<jdbc_url>"
+      ]
+    }
+  }
+}
 ----
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it's not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+=== Troubleshooting
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+* *jbang* is not found:
 
-If you want to build an _über-jar_, execute the following command:
+  * Make sure you have jbang installed and available in your PATH.
+  * Alternatively, use full path to jbang executable (e.g. `/Users/username/.jbang/jbang`).
 
-[source,shell]
+* Enable logging:
+
+  * To get more detailed logging you can add `-Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log` to the jbang command line.
+
+  Example:
+
+[source,shell,subs="attributes"]
 ----
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-----
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-== Creating a native executable
-
-You can create a native executable using:
-
-[source,shell]
-----
-./mvnw package -Dnative
+jbang  -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {jdbcalias} jdbc:h2:mem:testdb
 ----
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+=== How was this made ?
 
-[source,shell]
-----
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-----
+The MCP server uses Quarkus, the Supersonic Subatomic Java Framework and its Model Context Protocol support.
 
-You can then execute your native executable with: `./target/mcp-server-jdbc-1.0.0-SNAPSHOT-runner`
+If you want to learn more about Quarkus MCP Server support, please see this https://quarkus.io/blog/mcp-server/[blog post] 
+and the Quarkus MCP Server https://docs.quarkiverse.io/quarkus-mcp-server/dev/[extension documentation].
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling
+To launch the server and handle the magic setup of JDBC urls it uses https://jbang.dev/[jbang] to
+setup Java and run the .jar as transparent as possible. Very similar to how `uvx`, `pipx`, `npmx` and others works; just for Java.
 
-== Related Guides
-
-* Qute (link:https://quarkus.io/guides/qute[guide]): Offer templating support for web, email, etc in a build time, type-safe way
-
-== Examples
-
-=== Sakiladb in PostgreSQL
-
-Using https://github.com/sakiladb/postgres
-
-[source]
-----
-podman run -p 5432:5432 -d sakiladb/postgres:latest
-----
-
-[source]
-----
-jbang mcpjdbc.java -Djdbc.url="jdbc:postgresql://localhost:5432/sakila?user=sakila&password=p_ssW0rd"
-----
-
-=== Northwind 
-
-https://github.com/bradymholt/docker-postgresql-northwind
-
-=== Chinook
-
-[source]
-----
-jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
-----
