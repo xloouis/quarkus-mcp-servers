@@ -61,8 +61,11 @@ Below are a non-exhaustive list of databases and example JDBC urls that are know
 |Description |JDBC URL
 
 |Chinook database - Sample music store data including artists, albums, tracks, invoices etc.
-|`jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}``
-
+a|
+[source]
+----
+jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
+----
 |Northwind database - Classic Microsoft sample database with customers, orders, products etc.
 |jdbc:sqlite:%{https://github.com/jpwhite3/northwind-SQLite3/raw/refs/heads/main/dist/northwind.db}
 
