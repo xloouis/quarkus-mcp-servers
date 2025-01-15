@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -8,8 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import javax.sql.DataSource;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,21 +21,38 @@ import io.quarkiverse.mcp.server.PromptMessage;
 import io.quarkiverse.mcp.server.TextContent;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
+import io.quarkiverse.mcp.server.ToolResponse;
 import jakarta.inject.Inject;
 
-public class mcpjdbc {
+public class MCPServerJDBC {
     
     @Inject ObjectMapper mapper;
-    
-    @Inject DataSource dataSource;
 
-    //todo: not using quarkus datasource to allow any
+    @ConfigProperty(name = "jdbc.url")
+    String jdbcUrl;
+
+    @ConfigProperty(name = "jdbc.user")
+    Optional<String> jdbcUser;
+
+    @ConfigProperty(name = "jdbc.password")
+    Optional<String> jdbcPassword;
+    
     private Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
+        return DriverManager.getConnection(jdbcUrl, jdbcUser.orElse(null), jdbcPassword.orElse(null));
     }
 
+        ToolResponse error(String message) {
+            return new ToolResponse(true, 
+                    List.of(new TextContent(message)));
+        }
+
+        ToolResponse success(String message) {
+            return new ToolResponse(false, 
+                    List.of(new TextContent(message)));
+        }
+
     @Tool(description = "Execute a SELECT query on the jdbc database")
-    String read_query(@ToolArg(description = "SELECT SQL query to execute") String query) {
+    ToolResponse read_query(@ToolArg(description = "SELECT SQL query to execute") String query) {
         if(!query.strip().toUpperCase().startsWith("SELECT")) {
             throw new RuntimeException("Only SELECT queries are allowed for read_query");
         }
@@ -56,15 +75,15 @@ public class mcpjdbc {
                 }
                 results.add(row);
             }
-            return mapper.writeValueAsString(results);
+            return success(mapper.writeValueAsString(results));
 
         } catch (Exception e) {
-            throw new RuntimeException("Query execution failed: " + e.getMessage(), e);
+            return error("Query execution failed: " + e.getMessage());
         }
     }
 
     @Tool(description = "Execute a INSERT, UPDATE or DELETE query on the jdbc database")
-    String write_query(@ToolArg(description = "INSERT, UPDATE or DELETE SQL query to execute") String query) {
+    ToolResponse write_query(@ToolArg(description = "INSERT, UPDATE or DELETE SQL query to execute") String query) {
         if(query.strip().toUpperCase().startsWith("SELECT")) {
             throw new RuntimeException("SELECT queries are not allowed for write_query");
         }
@@ -72,14 +91,14 @@ public class mcpjdbc {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(query);
-            return "Query executed successfully";
+            return success("Query executed successfully");
         } catch (Exception e) {
-            throw new RuntimeException("Query execution failed: " + e.getMessage(), e);
+            return error("Query execution failed: " + e.getMessage());
         }
     }
 
     @Tool(description = "List all tables in the jdbc database")
-    String list_tables() {
+    ToolResponse list_tables() {
         try (Connection conn = getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
@@ -92,14 +111,14 @@ public class mcpjdbc {
                 table.put("TABLE_NAME", rs.getString("TABLE_NAME"));
                 tables.add(table);
             }
-            return mapper.writeValueAsString(tables);
+            return success(mapper.writeValueAsString(tables));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to list tables: " + e.getMessage(), e);
+            return error("Failed to list tables: " + e.getMessage());
         }
     }
 
     @Tool(description = "Create new table in the jdbc database")
-    String create_table(@ToolArg(description = "CREATE TABLE SQL statement") String query) {
+    ToolResponse create_table(@ToolArg(description = "CREATE TABLE SQL statement") String query) {
         if(!query.strip().toUpperCase().startsWith("CREATE TABLE")) {
             throw new RuntimeException("Only CREATE TABLE statements are allowed");
         }
@@ -107,7 +126,7 @@ public class mcpjdbc {
     }
 
     @Tool(description = "Describe table")
-    String describe_table(@ToolArg(description = "Catalog name", required = false) String catalog, 
+    ToolResponse describe_table(@ToolArg(description = "Catalog name", required = false) String catalog, 
                           @ToolArg(description = "Schema name", required = false) String schema, 
                           @ToolArg(description = "Table name") String table) {
         try (Connection conn = getConnection()) {
@@ -125,14 +144,22 @@ public class mcpjdbc {
                 column.put("COLUMN_DEF", rs.getString("COLUMN_DEF"));
                 columns.add(column);
             }
-            return mapper.writeValueAsString(columns);
+            return success(mapper.writeValueAsString(columns));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to describe table: " + e.getMessage(), e);
+            return error("Failed to describe table: " + e.getMessage());
         }
     }
 
-    @Prompt(description = "explains use of the jdbc mcp server") 
-    PromptMessage jdbc_demo(@PromptArg(description = "The topic") String topic) { 
+    @Prompt(description = "Visualize ER diagram") 
+    PromptMessage er_diagram() { 
+        return PromptMessage.withUserRole(new TextContent(
+            """
+            The assistants goal is to use the MCP server to create a visual ER diagram of the database.
+            """
+        ));
+    }
+    @Prompt(description = "Creates sample data and perform analysis") 
+    PromptMessage sample_data(@PromptArg(description = "The topic") String topic) { 
         return PromptMessage.withUserRole(new TextContent(
             """
             The assistants goal is to walkthrough an informative demo of MCP. To demonstrate the Model Context Protocol (MCP) we will leverage this example server to interact with an JDBC database.
