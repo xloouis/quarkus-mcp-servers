@@ -3,16 +3,18 @@
 
 == WORK IN PROGRESS!
 
-A Model Context Protocol server that provides access to databases as long as you know their JDBC urls.
+A Model Context Protocol(MCP) server implemented using Quarkus MCP & JBang that provides easy access to databases as long as you know their JDBC urls.
 
 This server enables Large Language Models (LLMs) to inspect, query, create and modify database content.
 
 == General Usage 
 
 1. Install https://www.jbang.dev/download/[jbang]
-2. Configure your MCP Client to run the server
+2. Configure your MCP Client to run the server (see <<claude_desktop_config>> below)
 
-Empty database (in-memory h2 database):
+Below are examples of command lines to use for configuring the server.
+
+Start with an empty database (in-memory h2 database):
 
 [source,shell,subs="attributes"]
 ----
@@ -23,24 +25,26 @@ A live database (any common JDBC compatible database):
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} <jdbc_url>
+jbang {jdbcalias} [jdbc_url]
 ----
 
-For example, to connect to a PostgreSQL database:
+For example, to connect to a already running Oracle database:
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} jdbc:postgresql://localhost:5432/sakila?user=sakila&password=p_ssW0rd
+jbang {jdbcalias} jdbc:oracle:thin:@localhost:1521:orcl
 ----
 
-You can also specify a user and password separately:
+You can also specify a user and password separately, here for a PostgreSQL database:
 
 [source,shell,subs="attributes"]
 ----
 jbang {jdbcalias} jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
 ----
 
-You can also use jbang's abilty to download files from the web and feed them directly to databases like h2 and sqlite.
+== Downloadable databases
+
+ JBang candownload files from the web and feed them directly to databases like h2 and sqlite.
 
 That is done using the %{url} syntax.
 
@@ -57,25 +61,34 @@ Below are a non-exhaustive list of databases and example JDBC urls that are know
 
 === Example databases 
 
-Chinook database - Sample music store data including artists, albums, tracks, invoices etc.::
+Chinook::
+
+Sample music store data including artists, albums, tracks, invoices etc.
 [source]
 ----
 jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
 ----
 
-Northwind database - Classic Microsoft sample database with customers, orders, products etc.::
+Northwind:: 
+
+Classic Microsoft sample database with customers, orders, products etc.
+
 [source]
 ----
 jdbc:sqlite:%{https://github.com/jpwhite3/northwind-SQLite3/raw/refs/heads/main/dist/northwind.db}
 ----
 
-Netflix Movies database - Sample movie data based on Netflix catalog::
+Netflix Movies:: 
+
+Sample movie data based on Netflix catalog
 [source]
 ----
 jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netflixdb.sqlite}
 ----
 
 == Components
+
+Below are the MCP components provided by this server.
 
 === Tools 
 
@@ -89,7 +102,8 @@ jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netf
 
 * *jdbc_demo* - example prompt to get started exploring the server (similar to the one in sqllite MCP)
 
-== Claude Desktop Config and https://github.com/chrishayuk/mcp-cli[mcp-cli]
+== Claude Desktop Config and https://github.com/chrishayuk/mcp-cli[mcp-cli] [[claude_desktop_config]]
+
 
 Add this to your `claude_desktop.json` or `server_config.json` file:
 
@@ -102,7 +116,7 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
       "args": [
         "--quiet",
         "{jdbcalias}",
-        "<jdbc_url>"
+        "[jdbc_url]"
       ]
     }
   }
@@ -111,20 +125,24 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
 
 === Troubleshooting
 
-* *jbang* is not found:
+jbang not found::
+* Make sure you have `jbang` installed and available in your PATH
+* Alternatively, use full path to jbang executable (e.g. `/Users/username/.jbang/jbang`)
 
-  * Make sure you have jbang installed and available in your PATH.
-  * Alternatively, use full path to jbang executable (e.g. `/Users/username/.jbang/jbang`).
+Get more logging::
 
-* Enable logging:
+To get more detailed logging you can add the following parameters to the jbang command line:
 
-  * To get more detailed logging you can add `-Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log` to the jbang command line.
-
-  Example:
-
-[source,shell,subs="attributes"]
+[source,shell]
 ----
-jbang  -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {jdbcalias} jdbc:h2:mem:testdb
+-Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log
+----
+
+Example:
+
+[source,shell,subs="attributes"] 
+----
+jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {jdbcalias} jdbc:h2:mem:testdb
 ----
 
 === How was this made ?
