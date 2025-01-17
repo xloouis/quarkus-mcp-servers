@@ -1,157 +1,20 @@
-= JDBC
-:jdbcalias: mcp-server-jdbc@quarkusio
+# Model Context Protocol Servers in Quarkus/Java
 
-== WORK IN PROGRESS!
+This project contains a number of Quarkus/Java servers for the Model Context Protocol.
 
-A Model Context Protocol(MCP) server implemented using Quarkus MCP & JBang that provides easy access to databases as long as you know their JDBC urls.
+## jdbc
 
-This server enables Large Language Models (LLMs) to inspect, query, create and modify database content.
+The `jdbc` server is a simple JDBC server that can be used to store and retrieve data from a JDBC database
+given just a JDBC URL.
 
-== General Usage 
+## filesystem
 
-1. Install https://www.jbang.dev/download/[jbang]
-2. Configure your MCP Client to run the server (see <<claude_desktop_config>> below)
-
-Below are examples of command lines to use for configuring the server.
-
-Start with an empty database (in-memory h2 database):
-
-[source,shell,subs="attributes"]
-----
-jbang {jdbcalias}
-----
-
-A live database (any common JDBC compatible database):
-
-[source,shell,subs="attributes"]
-----
-jbang {jdbcalias} [jdbc_url]
-----
-
-For example, to connect to a already running Oracle database:
-
-[source,shell,subs="attributes"]
-----
-jbang {jdbcalias} jdbc:oracle:thin:@localhost:1521:orcl
-----
-
-You can also specify a user and password separately, here for a PostgreSQL database:
-
-[source,shell,subs="attributes"]
-----
-jbang {jdbcalias} jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
-----
-
-== Downloadable databases
-
- JBang candownload files from the web and feed them directly to databases like h2 and sqlite.
-
-That is done using the %{url} syntax.
-
-Following is an example of how to connect to a Chinook database in SQLite, downloading the `Chinook_Sqlite.sqlite` file from github.
-
-[source,shell,subs="attributes"]
-----
-jbang {jdbcalias} jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
-----
-
-There are interesting examples of sample data available online you can use to explore data.
-
-Below are a non-exhaustive list of databases and example JDBC urls that are known to work with this server as-is (no additional configuration required).
-
-=== Example databases 
-
-Chinook::
-
-Sample music store data including artists, albums, tracks, invoices etc.
-[source]
-----
-jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
-----
-
-Northwind:: 
-
-Classic Microsoft sample database with customers, orders, products etc.
-
-[source]
-----
-jdbc:sqlite:%{https://github.com/jpwhite3/northwind-SQLite3/raw/refs/heads/main/dist/northwind.db}
-----
-
-Netflix Movies:: 
-
-Sample movie data based on Netflix catalog
-[source]
-----
-jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netflixdb.sqlite}
-----
-
-== Components
-
-Below are the MCP components provided by this server.
-
-=== Tools 
-
-* *read_query* - do a SELECT query on the database
-* *write_query* - do a INSERT, UPDATE, DELETE query on the database
-* *create_table* - create a table in the database
-* *list_tables* - list all tables in the database
-* *describe_table* - describe a table
-
-=== Prompts
-
-* *jdbc_demo* - example prompt to get started exploring the server (similar to the one in sqllite MCP)
-
-== Claude Desktop Config and https://github.com/chrishayuk/mcp-cli[mcp-cli] [[claude_desktop_config]]
+The `filesystem` server is a simple file system server that can be used to serve files from a file system.
 
 
-Add this to your `claude_desktop.json` or `server_config.json` file:
+#### Ideas for other servers
 
-[source,json]
-----
-{
-  "mcpServers": {
-    "jdbc": {
-      "command": "jbang",
-      "args": [
-        "--quiet",
-        "{jdbcalias}",
-        "[jdbc_url]"
-      ]
-    }
-  }
-}
-----
-
-=== Troubleshooting
-
-jbang not found::
-* Make sure you have `jbang` installed and available in your PATH
-* Alternatively, use full path to jbang executable (e.g. `/Users/username/.jbang/jbang`)
-
-Get more logging::
-
-To get more detailed logging you can add the following parameters to the jbang command line:
-
-[source,shell]
-----
--Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log
-----
-
-Example:
-
-[source,shell,subs="attributes"] 
-----
-jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {jdbcalias} jdbc:h2:mem:testdb
-----
-
-=== How was this made ?
-
-The MCP server uses Quarkus, the Supersonic Subatomic Java Framework and its Model Context Protocol support.
-
-If you want to learn more about Quarkus MCP Server support, please see this https://quarkus.io/blog/mcp-server/[blog post] 
-and the Quarkus MCP Server https://docs.quarkiverse.io/quarkus-mcp-server/dev/[extension documentation].
-
-To launch the server and handle the magic setup of JDBC urls it uses https://jbang.dev/[jbang] to
-setup Java and run the .jar as transparent as possible. Very similar to how `uvx`, `pipx`, `npmx` and others works; just for Java.
-
+- github
+- zulip
+- jfr/java hooked to jmx/jfr
+- quarkus dev mode

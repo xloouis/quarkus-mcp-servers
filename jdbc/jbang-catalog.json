@@ -1,0 +1,13 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "mcp-server-jdbc": {
+      "script-ref": "mcp-server-jdbc",
+      "arguments": [
+        ".scripts/mcpjdbc.java"
+      ],
+      "java-agents": []
+    }
+  },
+  "templates": {}
+}

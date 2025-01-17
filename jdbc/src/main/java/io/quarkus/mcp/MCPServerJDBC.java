@@ -1,4 +1,4 @@
-package io.quarkus.mcp;
+package io.quarkus.mcp.servers.jdbc;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -23,6 +23,7 @@ import io.quarkiverse.mcp.server.PromptMessage;
 import io.quarkiverse.mcp.server.TextContent;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
+import io.quarkiverse.mcp.server.ToolCallException;
 import io.quarkiverse.mcp.server.ToolResponse;
 import jakarta.inject.Inject;
 
@@ -43,21 +44,8 @@ public class MCPServerJDBC {
         return DriverManager.getConnection(jdbcUrl, jdbcUser.orElse(null), jdbcPassword.orElse(null));
     }
 
-        ToolResponse error(String message) {
-            return new ToolResponse(true, 
-                    List.of(new TextContent(message)));
-        }
-
-        ToolResponse success(String message) {
-            return new ToolResponse(false, 
-                    List.of(new TextContent(message)));
-        }
-
     @Tool(description = "Execute a SELECT query on the jdbc database")
-    ToolResponse read_query(@ToolArg(description = "SELECT SQL query to execute") String query) {
-        if(!query.strip().toUpperCase().startsWith("SELECT")) {
-            throw new RuntimeException("Only SELECT queries are allowed for read_query");
-        }
+    String read_query(@ToolArg(description = "SELECT SQL query to execute") String query) {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -77,30 +65,30 @@ public class MCPServerJDBC {
                 }
                 results.add(row);
             }
-            return success(mapper.writeValueAsString(results));
+            return mapper.writeValueAsString(results);
 
         } catch (Exception e) {
-            return error("Query execution failed: " + e.getMessage());
+            throw new ToolCallException("Query execution failed: " + e.getMessage(), e);
         }
     }
 
     @Tool(description = "Execute a INSERT, UPDATE or DELETE query on the jdbc database")
-    ToolResponse write_query(@ToolArg(description = "INSERT, UPDATE or DELETE SQL query to execute") String query) {
+    String write_query(@ToolArg(description = "INSERT, UPDATE or DELETE SQL query to execute") String query) {
         if(query.strip().toUpperCase().startsWith("SELECT")) {
-            throw new RuntimeException("SELECT queries are not allowed for write_query");
+            throw new ToolCallException("SELECT queries are not allowed for write_query", null);
         }
 
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(query);
-            return success("Query executed successfully");
+            return "Query executed successfully";
         } catch (Exception e) {
-            return error("Query execution failed: " + e.getMessage());
+            throw new ToolCallException("Query execution failed: " + e.getMessage(), e);
         }
     }
 
     @Tool(description = "List all tables in the jdbc database")
-    ToolResponse list_tables() {
+    String list_tables() {
         try (Connection conn = getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
@@ -113,22 +101,22 @@ public class MCPServerJDBC {
                 table.put("TABLE_NAME", rs.getString("TABLE_NAME"));
                 tables.add(table);
             }
-            return success(mapper.writeValueAsString(tables));
+            return mapper.writeValueAsString(tables);
         } catch (Exception e) {
-            return error("Failed to list tables: " + e.getMessage());
+            throw new ToolCallException("Failed to list tables: " + e.getMessage(), e);
         }
     }
 
     @Tool(description = "Create new table in the jdbc database")
-    ToolResponse create_table(@ToolArg(description = "CREATE TABLE SQL statement") String query) {
+    String create_table(@ToolArg(description = "CREATE TABLE SQL statement") String query) {
         if(!query.strip().toUpperCase().startsWith("CREATE TABLE")) {
-            throw new RuntimeException("Only CREATE TABLE statements are allowed");
+            throw new ToolCallException("Only CREATE TABLE statements are allowed", null);
         }
         return write_query(query);
     }
 
     @Tool(description = "Describe table")
-    ToolResponse describe_table(@ToolArg(description = "Catalog name", required = false) String catalog, 
+    String describe_table(@ToolArg(description = "Catalog name", required = false) String catalog, 
                           @ToolArg(description = "Schema name", required = false) String schema, 
                           @ToolArg(description = "Table name") String table) {
         try (Connection conn = getConnection()) {
@@ -146,11 +134,34 @@ public class MCPServerJDBC {
                 column.put("COLUMN_DEF", rs.getString("COLUMN_DEF"));
                 columns.add(column);
             }
-            return success(mapper.writeValueAsString(columns));
+            return mapper.writeValueAsString(columns);
         } catch (Exception e) {
-            return error("Failed to describe table: " + e.getMessage());
+            throw new ToolCallException("Failed to describe table: " + e.getMessage());
         }
     }
+
+    @Tool(description = "Get information about the database. Run this before anything else to know the SQL dialect, keywords etc.")
+    String database_info() {
+        try (Connection conn = getConnection()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            Map<String, String> info = new HashMap<>();
+            
+            info.put("database_product_name", metaData.getDatabaseProductName());
+            info.put("database_product_version", metaData.getDatabaseProductVersion());
+            info.put("driver_name", metaData.getDriverName());
+            info.put("driver_version", metaData.getDriverVersion());
+            //info.put("url", metaData.getURL());
+            //info.put("username", metaData.getUserName());
+            info.put("max_connections", String.valueOf(metaData.getMaxConnections()));
+            info.put("read_only", String.valueOf(metaData.isReadOnly()));
+            info.put("supports_transactions", String.valueOf(metaData.supportsTransactions()));
+            info.put("sql_keywords", metaData.getSQLKeywords());
+            
+            return mapper.writeValueAsString(info);
+        } catch (Exception e) {
+            throw new ToolCallException("Failed to get database info: " + e.getMessage(), e);
+        }
+    }   
 
     @Prompt(description = "Visualize ER diagram") 
     PromptMessage er_diagram() { 
