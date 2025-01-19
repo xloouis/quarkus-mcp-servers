@@ -24,7 +24,6 @@ import io.quarkiverse.mcp.server.TextContent;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;
-import io.quarkiverse.mcp.server.ToolResponse;
 import jakarta.inject.Inject;
 
 public class MCPServerJDBC {

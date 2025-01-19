@@ -1,5 +1,6 @@
 package io.quarkus.mcp.servers.filesystem;
 
+import static io.quarkus.mcp.servers.filesystem.FSUtil.expandHome;
 import static java.nio.file.Files.exists;
 
 import java.io.IOException;
@@ -23,100 +24,22 @@ import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;
 import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
 
 public class MCPServerFS {
     
-    private List<String> allowedPaths;
+    @Inject FSUtil util;
+
     private ObjectMapper mapper;
 
     public MCPServerFS(
-            @ConfigProperty(name = "fileserver.paths") List<String> allowedPaths,
             ObjectMapper mapper) {
-        this.allowedPaths = allowedPaths.stream().map(this::expandHome).collect(Collectors.toList());
         this.mapper = mapper;
-    }
-
-    String expandHome(String filepath) {
-        if (filepath.startsWith("~/") || filepath.equals("~")) {
-            Log.info("Expanding home path: " + filepath);
-            return Path.of(System.getProperty("user.home"), filepath.substring(1))
-                    .toString();
-        }
-        return filepath;
-    }
-
-    Path validateAndResolvePath(String path) {
-        path = expandHome(path);
-        
-        Path resolvedPath = Path.of(path).normalize();
-        Log.info("Resolved path: " + resolvedPath);
-        if (!allowedPaths.stream().anyMatch(allowedPath -> resolvedPath.startsWith(Path.of(allowedPath).normalize()))) {
-            throw new ToolCallException("Access denied: Path is not within allowed directories", null);
-        }
-        return resolvedPath;
-    }
-
-    Path validatePath(String requestedPath) throws IOException {
-        String expandedPath = expandHome(requestedPath);
-        
-        // resolve relative paths to current working dir if need bePat
-        Path absolute = Path.of(expandedPath).isAbsolute() ? Path.of(expandedPath)
-                : Path.of(System.getProperty("user.dir")).resolve(expandedPath);
-
-        Path normalizedRequested = absolute.normalize();
-
-        // Check if path is within allowed directories
-        boolean isAllowed = allowedPaths.stream()
-                .map(dir -> Path.of(dir).normalize())
-                .anyMatch(dir -> normalizedRequested.startsWith(dir));
-
-        if (!isAllowed) {
-            throw new ToolCallException(
-                    String.format("Access denied - path outside allowed directories: %s not in %s",
-                            absolute, String.join(", ", allowedPaths)),
-                    null);
-        }
-
-        try {
-            // Handle symlinks by checking their real path
-            Path realPath = absolute.toRealPath();
-            Path normalizedReal = realPath.normalize();
-
-            boolean isRealPathAllowed = allowedPaths.stream()
-                    .map(dir -> Path.of(dir).normalize())
-                    .anyMatch(dir -> normalizedReal.startsWith(dir));
-
-            if (!isRealPathAllowed) {
-                throw new ToolCallException("Access denied - symlink target outside allowed directories", null);
-            }
-            return realPath;
-
-        } catch (IOException e) {
-            // For new files that don't exist yet, verify parent directory
-            Path parentDir = absolute.getParent();
-            try {
-                Path realParentPath = parentDir.toRealPath();
-                Path normalizedParent = realParentPath.normalize();
-
-                boolean isParentAllowed = allowedPaths.stream()
-                        .map(dir -> Path.of(dir).normalize())
-                        .anyMatch(dir -> normalizedParent.startsWith(dir));
-
-                if (!isParentAllowed) {
-                    throw new ToolCallException("Access denied - parent directory outside allowed directories",
-                            null);
-                }
-                return absolute;
-
-            } catch (IOException ex) {
-                throw new ToolCallException("Parent directory does not exist: " + parentDir, ex);
-            }
-        }
     }
 
     @Tool(description = "Read the complete contents of a file from the file system. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Only works within allowed directories.")
     String read_file(@ToolArg(description = "Path to the file to read") String path) {
-        Path resolvedPath = validateAndResolvePath(path);
+        Path resolvedPath = util.validateAndResolvePath(path);
         if (!exists(resolvedPath)) {
             throw new ToolCallException("Path does not exist: " + path, null);
         }
@@ -142,7 +65,7 @@ public class MCPServerFS {
         
         try {
             for (String path : paths) {
-                var realpath = validateAndResolvePath(path);
+                var realpath = util.validateAndResolvePath(path);
                 result.put(path, Files.readString(realpath));
             }
         } catch (IOException e) {
@@ -151,29 +74,9 @@ public class MCPServerFS {
         return valueAsString(result);
     }
 
-    @Tool(description = "Create a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning. Handles text content with proper encoding. Only works within allowed directories.")
-    String write_file(@ToolArg(description = "Path where to write the file") String path,
-            @ToolArg(description = "Content to write to the file") String content) {
-        // TODO: Implement file writing logic
-        throw new ToolCallException("Not implemented yet", null);
-    }
-
-    @Tool(description = "Make line-based edits to a text file. Each edit replaces exact line sequences with new content. Returns a git-style diff showing the changes made. Only works within allowed directories.")
-    String edit_file(@ToolArg(description = "Path to the file to edit") String path,
-            @ToolArg(description = "List of line edits to apply") List<Map<String, String>> edits) {
-        // TODO: Implement file editing logic
-        throw new ToolCallException("Not implemented yet", null);
-    }
-
-    @Tool(description = "Create a new directory or ensure a directory exists. Can create multiple nested directories in one operation. If the directory already exists, this operation will succeed silently. Perfect for setting up directory structures for projects or ensuring required paths exist. Only works within allowed directories.")
-    String create_directory(@ToolArg(description = "Path of directory to create") String path) {
-        // TODO: Implement directory creation logic
-        throw new ToolCallException("Not implemented yet", null);
-    }
-
     @Tool(description = "Get a detailed listing of all files and directories in a specified path. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is essential for understanding directory structure and finding specific files within a directory. Only works within allowed directories.")
     String list_directory(@ToolArg(description = "Path to list contents of") String path, McpLog logger) {
-        Path resolvedPath = validateAndResolvePath(path);
+        Path resolvedPath = util.validateAndResolvePath(path);
         logger.info("Listing directory: " + resolvedPath);
         if (!exists(resolvedPath)) {
             throw new ToolCallException("Path does not exist: " + path, null);
@@ -199,7 +102,7 @@ public class MCPServerFS {
 
     @Tool(description = "Get a recursive tree view of files and directories as a JSON structure. Each entry includes 'name', 'type' (file/directory), and 'children' for directories. Files have no children array, while directories always have a children array (which may be empty). The output is formatted with 2-space indentation for readability. Only works within allowed directories.")
     String directory_tree(@ToolArg(description = "Root path to create tree from") String path) {
-        Path resolvedPath = validateAndResolvePath(path);
+        Path resolvedPath = util.validateAndResolvePath(path);
         if (!exists(resolvedPath)) {
             throw new ToolCallException("Path does not exist: " + path, null);
         }
@@ -260,11 +163,7 @@ public class MCPServerFS {
 
     @Tool(description = "Returns the list of directories that this server is allowed to access. Use this to understand which directories are available before trying to access files.")
     String list_allowed_directories() {
-        try {
-            return mapper.writeValueAsString(allowedPaths);
-        } catch (Exception e) {
-            throw new ToolCallException("Failed to list allowed directories: " + e.getMessage(), e);
+            return valueAsString(util.getAllowedPaths());
         }
-    }
 
 }
