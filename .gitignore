@@ -43,5 +43,4 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
-.quarkus/quarkus-prod-config-dump
 quarkus-prod-config-dump
