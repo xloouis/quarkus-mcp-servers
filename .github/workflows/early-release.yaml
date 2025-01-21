@@ -54,7 +54,7 @@ jobs:
           cache: maven
 
       - name: Build
-        run: ./mvnw -ntp -B verify
+        run: ./mvnw -ntp -B -Pearlyaccess verify
 
       - name: Release
         uses: jreleaser/release-action@v2
