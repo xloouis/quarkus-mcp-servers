@@ -6,7 +6,7 @@ on:
 
 env:
   JAVA_VERSION: '21'
-  JAVA_DISTRO: 'adoptium'
+  JAVA_DISTRO: 'temurin'
 
 jobs:
   precheck:
