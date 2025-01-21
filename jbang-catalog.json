@@ -1,0 +1,12 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "mcp-server-filesystem": {
+      "script-ref": "https://github.com/maxandersen/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar"
+    },
+    "mcp-server-jdbc": {
+      "script-ref": "jdbc/.scripts/mcpjdbc.java"
+    }
+  },
+  "templates": {}
+}
