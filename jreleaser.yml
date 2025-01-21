@@ -1,0 +1,24 @@
+project:
+  name: quarkus-mcp-servers
+  description: Collection of Quarkus based MCP Servers
+  longDescription: Collection of Quarkus based MCP Servers
+  links:
+    homepage: https://github.com/maxandersen/quarkus-mcp-servers
+  authors:
+    - Max Rydahl Andersen
+  license: APACHE-2.0
+  inceptionYear: 2025
+  stereotype: CLI
+
+release:
+  github:
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+files:
+  globs:
+    - pattern: '**/target/mcp-server-*.jar'
