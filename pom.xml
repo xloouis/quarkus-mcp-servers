@@ -27,7 +27,7 @@
         <surefire-plugin.version>3.5.0</surefire-plugin.version>
 
       <!-- <mcp.server.version>1.0.0.Alpha4</mcp.server.version> -->
-        <mcp.server.version>999-SNAPSHOT</mcp.server.version>
+        <mcp.server.version>1.0.0.Alpha4</mcp.server.version>
 
     </properties>
 
