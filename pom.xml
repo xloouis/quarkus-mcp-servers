@@ -17,9 +17,18 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-        <mcp.server.version>1.0.0.Alpha4</mcp.server.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.version>3.17.6</quarkus.platform.version>
+        <skipITs>true</skipITs>
+        <surefire-plugin.version>3.5.0</surefire-plugin.version>
+
+      <!-- <mcp.server.version>1.0.0.Alpha4</mcp.server.version> -->
+        <mcp.server.version>999-SNAPSHOT</mcp.server.version>
+
     </properties>
 
     <dependencyManagement>
@@ -28,5 +37,38 @@
         </dependencies>
     </dependencyManagement>
 
+<profiles>
+     <profile>
+            <id>sse</id>
+            <activation>
+                <property>
+                    <name>sse</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkiverse.mcp</groupId>
+                    <artifactId>quarkus-mcp-server-sse</artifactId>
+                    <version>${mcp.server.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>stdio</id>
+            <activation>
+                <property>
+                    <name>sse</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkiverse.mcp</groupId>
+                    <artifactId>quarkus-mcp-server-stdio</artifactId>
+                    <version>${mcp.server.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+</profiles>
 
 </project> 

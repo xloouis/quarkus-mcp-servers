@@ -36,7 +36,7 @@ public class FSUtil {
         Path resolvedPath = Path.of(path).normalize();
         Log.info("Resolved path: " + resolvedPath);
         if (!allowedPaths.stream().anyMatch(allowedPath -> resolvedPath.startsWith(Path.of(allowedPath).normalize()))) {
-            throw new ToolCallException("Access denied: Path is not within allowed directories", null);
+            throw new ToolCallException("Access denied: Path '" + path + "' is not within allowed directories", null);
         }
         return resolvedPath;
     }

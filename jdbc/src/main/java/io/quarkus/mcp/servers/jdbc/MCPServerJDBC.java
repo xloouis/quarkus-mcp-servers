@@ -17,6 +17,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.quarkiverse.mcp.server.McpLog;
 import io.quarkiverse.mcp.server.Prompt;
 import io.quarkiverse.mcp.server.PromptArg;
 import io.quarkiverse.mcp.server.PromptMessage;
@@ -87,7 +88,10 @@ public class MCPServerJDBC {
     }
 
     @Tool(description = "List all tables in the jdbc database")
-    String list_tables() {
+    String list_tables(McpLog log) {
+        log.debug("Listing tables");
+        log.error("Listing tables");
+        System.err.println("Listing tables (stderr)");
         try (Connection conn = getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
