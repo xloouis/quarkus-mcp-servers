@@ -2,10 +2,20 @@
   "catalogs": {},
   "aliases": {
     "mcp-server-filesystem": {
-      "script-ref": "https://github.com/maxandersen/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar"
+      "script-ref": "https://github.com/maxandersen/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
+      "java":"17+"
+    },
+    "filesystem": {
+      "script-ref": "https://github.com/maxandersen/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
+      "java":"17+"
     },
     "mcp-server-jdbc": {
-      "script-ref": "jdbc/.scripts/mcpjdbc.java"
+      "script-ref": "jdbc/.scripts/mcpjdbc.java",
+      "java":"17+"
+    },
+    "jdbc": {
+      "script-ref": "jdbc/.scripts/mcpjdbc.java",
+      "java":"17+"
     }
   },
   "templates": {}

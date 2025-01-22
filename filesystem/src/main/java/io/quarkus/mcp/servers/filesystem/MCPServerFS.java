@@ -24,6 +24,7 @@ import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.Startup;
 import jakarta.inject.Inject;
 
 public class MCPServerFS {
@@ -35,6 +36,11 @@ public class MCPServerFS {
     public MCPServerFS(
             ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    @Startup
+    void init() {
+        Log.info("Starting file server with paths: " + util.getAllowedPaths());
     }
 
     @Tool(description = "Read the complete contents of a file from the file system. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Only works within allowed directories.")

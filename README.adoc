@@ -9,9 +9,21 @@ This project contains a number of Quarkus/Java servers for the Model Context Pro
 The `jdbc` server is a simple JDBC server that can be used to store and retrieve data from a JDBC database
 given just a JDBC URL.
 
+```
+jbang -q jdbc@maxandersen/quarkus-mcp-servers [jdbcurl]
+```
+
+See more in the link:jdbc/README.adoc[jdbc readme].
+
 ### link:filesystem[filesystem]
 
 The `filesystem` server is a simple file system server that can be used to serve files from a file system.
+
+```
+jbang -q filesystem@maxandersen/quarkus-mcp-servers [path1] [path2] ...
+```
+
+See more in the link:filesystem/README.adoc[filesystem readme].
 
 ## Ideas for other servers
 
