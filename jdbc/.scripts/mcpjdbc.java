@@ -20,15 +20,14 @@ import picocli.CommandLine.Parameters;
 // jdbc urls: https://www.baeldung.com/java-jdbc-url-format
 // maven drivers: https://vladmihalcea.com/jdbc-driver-maven-dependency/
 
-@Command(name = "mcp-server-jdbc", mixinStandardHelpOptions = true, version = "1.0", 
-        description = """
+@Command(name = "mcp-server-jdbc", mixinStandardHelpOptions = true, version = "1.0", description = """
         Launch a jdbc server to connect a jdbc database using sqlline or h2 web console.
-        
+
         Examples:
         mcp-server-jdbc jdbc:oracle:thin:@myoracle.db.server:1521:my_sid
         """)
 class jdbc implements Callable<Integer> {
-    
+
     @Parameters(index = "0", arity = "0..1", description = "JDBC url to connect to. Defaults to in-memory h2 database", defaultValue = "jdbc:h2:mem:test")
     String jdbcurl;
 
@@ -48,7 +47,7 @@ class jdbc implements Callable<Integer> {
 
     String getMcpServerAlias() {
         String mcpServer = System.getProperty("mcp.jdbc.server");
-        if(mcpServer == null) { // use earlyaccess version by default for now.
+        if (mcpServer == null) { // use earlyaccess version by default for now.
             mcpServer = "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-jdbc.jar";
         }
         return mcpServer;
@@ -76,9 +75,9 @@ class jdbc implements Callable<Integer> {
 
         List<String> command = new ArrayList<>();
 
-        //use the jbang command from env or assume on path
+        // use the jbang command from env or assume on path
         String jbangcmd = System.getenv("JBANG_LAUNCH_CMD");
-        if(jbangcmd == null) {
+        if (jbangcmd == null) {
             String os = System.getProperty("os.name").toLowerCase();
             if (os.contains("win")) {
                 jbangcmd = "jbang.cmd";
@@ -94,34 +93,37 @@ class jdbc implements Callable<Integer> {
 
         command.add("-Djdbc.url=" + jdbcurl);
 
-        if(user != null) {
+        if (user != null) {
             command.add("-Djdbc.user=" + user);
         }
-        if(password != null) {
+        if (password != null) {
             command.add("-Djdbc.password=" + password);
         }
-        
+
         System.getProperties().forEach((key, value) -> {
-            if (((String)key).startsWith("quarkus.") || ((String)key).startsWith("jdbc.")) {
+            if (((String) key).startsWith("quarkus.") || ((String) key).startsWith("jdbc.")) {
                 command.add("-D" + key + "=" + value);
             }
         });
 
-        
-        
         command.add(getMcpServerAlias());
 
         if (!additionalArgs.isEmpty()) {
             command.addAll(additionalArgs);
         }
 
-       // System.out.println(String.join(" ", command));
-       
-            ProcessBuilder processBuilder = new ProcessBuilder(command);
-            processBuilder.inheritIO();
-            Process process = processBuilder.start();
-            process.waitFor();
+        // System.out.println(String.join(" ", command));
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        processBuilder.inheritIO();
+        Process process = processBuilder.start();
+        processBuilder.inheritIO();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            process.destroyForcibly();
+        }));
+        process.waitFor();
         
+
         return 0;
     }
 
