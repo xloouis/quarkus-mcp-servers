@@ -1,5 +1,5 @@
 = Model Context Protocol Sever for JavaFX
-:mcpalias: mcp-server-jfx@quarkiverse/quarkus-mcp-servers
+:mcpalias: jfx@quarkiverse/quarkus-mcp-servers
 
 This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to make drawings using JavaFX primities.
 
@@ -10,11 +10,24 @@ Initial idea and implementation is from https://gist.github.com/konczdev/5e6774d
 == General Usage 
 
 1. Install https://www.jbang.dev/download/[jbang]
-2. Configure your MCP Client to run the server (see <<claude_desktop_config>> below)
+2. Configure your MCP Client to run the server as `jbang {mcpalias}` (see <<claude_desktop_config>> below)
 
-Below are examples of command lines to use for configuring the server.
 
-[source,shell,subs="attributes"]
+== Claude Desktop Config and https://github.com/chrishayuk/mcp-cli[mcp-cli] [[claude_desktop_config]]
+
+
+Add this to your `claude_desktop.json` or `server_config.json` file:
+
+[source,json]
 ----
-jbang {mcpalias}
+{
+  "mcpServers": {
+    "jfx": {
+      "command": "jbang",
+      "args": [
+        "{mpcalias}"
+      ]
+    }
+  }
+}
 ----

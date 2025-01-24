@@ -155,7 +155,6 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
     "jdbc": {
       "command": "jbang",
       "args": [
-        "--quiet",
         "{mpcalias}",
         "[jdbc_url]"
       ]
