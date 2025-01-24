@@ -1,11 +1,9 @@
 = Model Context Protocol Sever for JDBC
-:jdbcalias: mcp-server-jdbc@quarkusio
+:mpcalias: mcp-server-jdbc@quarkusio
 
-== WORK IN PROGRESS!
+This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to inspect, query, create and modify database content given just a Java Database Connectivity (JDBC) url.
 
-This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to inspect, query, create and modify database content given just a JDBC url.
-
-The server is implemented using Quarkus MCP & JBang that handles the magic of setting up the Java environment and running the server with the right database drivers as transparent as possible.
+Supported databases include PostgresSQL, Oracle, MariaDB, Sqlite and <<jdbc_variants,many more>>.
 
 == General Usage 
 
@@ -18,33 +16,33 @@ Start with an empty database (in-memory h2 database):
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias}
+jbang {mpcalias}
 ----
 
 A live database (any common JDBC compatible database):
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} [jdbc_url]
+jbang {mpcalias} [jdbc_url]
 ----
 
 For example, to connect to a already running Oracle database:
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} jdbc:oracle:thin:@localhost:1521:orcl
+jbang {mpcalias} jdbc:oracle:thin:@localhost:1521:orcl
 ----
 
 You can also specify a user and password separately, here for a PostgreSQL database:
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
+jbang {mpcalias} jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
 ----
 
 == Downloadable databases
 
- JBang candownload files from the web and feed them directly to databases like h2 and sqlite.
+JBang can download files from the web and feed them directly to databases like h2 and sqlite.
 
 That is done using the %{url} syntax.
 
@@ -52,7 +50,7 @@ Following is an example of how to connect to a Chinook database in SQLite, downl
 
 [source,shell,subs="attributes"]
 ----
-jbang {jdbcalias} jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
+jbang {mpcalias} jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
 ----
 
 There are interesting examples of sample data available online you can use to explore data.
@@ -86,6 +84,49 @@ Sample movie data based on Netflix catalog
 jdbc:sqlite:%{https://github.com/lerocha/netflixdb/releases/download/v1.0.0/netflixdb.sqlite}
 ----
 
+== Supported JDBC variants [[jdbc_variants]]
+
+.JDBC variants
+|===
+|Database|Dependency
+
+|https://mariadb.com/kb/en/mariadb-connector-j/[MariaDB]
+|org.mariadb.jdbc:mariadb-java-client:RELEASE
+
+|https://dev.mysql.com/doc/connector-j/8.0/en/[MySQL]
+|mysql:mysql-connector-java:RELEASE,
+
+|https://jdbc.postgresql.org/documentation/head/connect.html[PostgreSQL]
+|org.postgresql:postgresql:RELEASE,
+
+|https://docs.oracle.com/en/database/oracle/oracle-database/19/jjdbc/JDBC-driver-connection-url-syntax.html[Oracle]
+|com.oracle.database.jdbc:ojdbc10:RELEASE
+
+|https://docs.microsoft.com/en-us/sql/connect/jdbc/microsoft-jdbc-driver-for-sql-server?view=sql-server-ver15[SQL Server]
+|com.microsoft.sqlserver:mssql-jdbc:RELEASE
+
+|https://help.sap.com/viewer/0eec0d68141541d1b07893a39944924e/2.0.02/en-US/109397c2206a4ab2a5386d494f4cf75e.html[SAP DB]
+|com.sapcloud.db.jdbc:ngdbc:RELEASE
+
+|https://www.ibm.com/docs/en/informix-servers/14.10?topic=SSGU8G_14.1.0/com.ibm.jdbc_pg.doc/ids_jdbc_501.htm[Informix]
+|com.ibm.informix:jdbc:RELEASE
+
+|https://www.firebirdsql.org/file/documentation/drivers_documentation/java/3.0.7/firebird-classic-server.html[Firebird]
+|org.firebirdsql.jdbc:jaybird:RELEASE
+
+|https://hsqldb.org/doc/2.0/guide/dbproperties-chapt.html[hsqldb]
+|org.hsqldb:hsqldb:RELEASE
+
+|https://www.h2database.com/html/features.html#database_url[h2]
+|com.h2database:h2:RELEASE
+
+|https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html[Apache Derby]
+|org.apache.derby:derby:RELEASE
+
+|SQLite
+|org.xerial:sqlite-jdbc:RELEASE
+|===
+
 == Components
 
 Below are the MCP components provided by this server.
@@ -115,7 +156,7 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
       "command": "jbang",
       "args": [
         "--quiet",
-        "{jdbcalias}",
+        "{mpcalias}",
         "[jdbc_url]"
       ]
     }
@@ -142,7 +183,7 @@ Example:
 
 [source,shell,subs="attributes"] 
 ----
-jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {jdbcalias} jdbc:h2:mem:testdb
+jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {mpcalias} jdbc:h2:mem:testdb
 ----
 
 === How was this made ?

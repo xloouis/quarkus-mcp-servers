@@ -1,0 +1,20 @@
+= Model Context Protocol Sever for JavaFX
+:mcpalias: mcp-server-jfx@quarkiverse/quarkus-mcp-servers
+
+This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to make drawings using JavaFX primities.
+
+The server is implemented using Quarkus MCP and JavaFX.
+
+Initial idea and implementation is from https://gist.github.com/konczdev/5e6774d2d8640bf83baab88cb068bcc2[@konczdev]
+
+== General Usage 
+
+1. Install https://www.jbang.dev/download/[jbang]
+2. Configure your MCP Client to run the server (see <<claude_desktop_config>> below)
+
+Below are examples of command lines to use for configuring the server.
+
+[source,shell,subs="attributes"]
+----
+jbang {mcpalias}
+----

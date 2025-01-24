@@ -3,7 +3,7 @@
   "aliases": {
     "mcp-server-filesystem": {
       "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
-      "java":"17+"
+      "java": "17+"
     },
     "filesystem": {
       "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
@@ -11,12 +11,27 @@
     },
     "mcp-server-jdbc": {
       "script-ref": "jdbc/.scripts/mcpjdbc.java",
-      "java":"17+"
+      "java": "17+"
     },
     "jdbc": {
       "script-ref": "jdbc/.scripts/mcpjdbc.java",
-      "java":"17+"
+      "java": "17+"
+    },
+    "mcp-server-jfx-script": {
+      "script-ref": "jfx/src/main/java/io/quarkus/mcp/servers/jfx/MCPServerJFX.java"
+    },
+    "jfx-script": {
+      "script-ref": "jfx/src/main/java/io/quarkus/mcp/servers/jfx/MCPServerJFX.java"
+    },
+    "mcp-server-jfx": {
+      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-jfx-filesystem.jar",
+      "java": "17+"
+    },
+    "jfx": {
+      "script-ref": "https://github.com/quarkivers/quarkus-mcp-servers/releases/download/early-access/mcp-server-jfx.jar",
+      "java": "17+"
     }
+    
   },
   "templates": {}
 }

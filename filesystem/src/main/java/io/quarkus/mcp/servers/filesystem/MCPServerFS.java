@@ -1,6 +1,5 @@
 package io.quarkus.mcp.servers.filesystem;
 
-import static io.quarkus.mcp.servers.filesystem.FSUtil.expandHome;
 import static java.nio.file.Files.exists;
 
 import java.io.IOException;
@@ -12,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

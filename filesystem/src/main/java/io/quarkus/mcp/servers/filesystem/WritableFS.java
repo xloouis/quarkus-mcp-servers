@@ -1,3 +1,5 @@
+package io.quarkus.mcp.servers.filesystem;
+
 import static java.nio.file.Files.exists;
 
 import java.io.IOException;
@@ -58,5 +60,6 @@ public class WritableFS {
                 throw new ToolCallException("Failed to create directory: " + e.getMessage(), e);
             }
         }
+        return "Directory already exists: " + path;
     }
 }
