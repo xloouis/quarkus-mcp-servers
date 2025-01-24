@@ -69,37 +69,7 @@
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- cross-platform javafx -->
-        <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-controls</artifactId>
-        <version>21</version>
-    </dependency>
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-graphics </artifactId>
-        <version>21</version>
-        <classifier>win</classifier>
-    </dependency>
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-graphics </artifactId>
-        <version>21</version>
-        <classifier>linux</classifier>
-    </dependency>
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-graphics </artifactId>
-        <version>21</version>
-        <classifier>mac</classifier>
-    </dependency>
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-graphics</artifactId>
-        <version>21</version>
-        <classifier>mac-aarch64</classifier>
-    </dependency>
+       
     </dependencies>
 
     <build>
