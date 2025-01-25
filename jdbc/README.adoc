@@ -5,6 +5,10 @@ This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to 
 
 Supported databases include PostgresSQL, Oracle, MariaDB, Sqlite and <<jdbc_variants,many more>>.
 
+image::images/jdbc-demo.png[]
+
+image::images/jdbc-trends-demo.png[]
+
 == General Usage 
 
 1. Install https://www.jbang.dev/download/[jbang]

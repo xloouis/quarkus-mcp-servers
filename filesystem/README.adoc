@@ -3,6 +3,8 @@
 
 This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to list, read and modify files from the filesystem.
 
+image::images/filesystem-demo.png[]
+
 == General Usage 
 
 1. Install https://www.jbang.dev/download/[jbang]

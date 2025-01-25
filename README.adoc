@@ -12,6 +12,8 @@ https://github.com/punkpeye/awesome-mcp-clients[Awesome MCP Clients] page.
 
 ### link:jdbc[jdbc]
 
+image::jdbc/images/jdbc-trends-demo.png[]
+
 The `jdbc` server can be used to store and retrieve data from a database given just a JDBC URL. You can use any JDBC database, like Postgres, MySQL, Oracle, Sqlite, etc.
 
 ```
@@ -22,6 +24,8 @@ See more in the link:jdbc/README.adoc[jdbc readme].
 
 ### link:filesystem[filesystem]
 
+image::filesystem/images/filesystem-demo.png[]
+
 The `filesystem` server is a file system server that can be used to serve files from a file system.
 
 ```
@@ -30,8 +34,11 @@ jbang -q filesystem@quarkiverse/quarkus-mcp-servers [path1] [path2] ...
 
 See more in the link:filesystem/README.adoc[filesystem readme].
 
-
 ### link:jfx[jfx]
+
+image::jfx/images/jfx-demo.png[]
+
+video::jfx/images/jfx-demo.mp4[JFX Demo]
 
 The `jfx` server exposes a canvas that can be used to make drawings using JavaFX.
 
