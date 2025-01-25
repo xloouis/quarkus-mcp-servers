@@ -9,7 +9,7 @@ Initial idea and implementation is from https://gist.github.com/konczdev/5e6774d
 
 image::images/jfx-demo.png[JFX Demo, link=https://www.youtube.com/watch?v=Wnh_-0dAaDI]
 
-
+See video https://www.youtube.com/watch?v=Wnh_-0dAaDI[here].
 
 == General Usage 
 

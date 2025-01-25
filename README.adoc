@@ -17,7 +17,7 @@ image::jdbc/images/jdbc-trends-demo.png[]
 The `jdbc` server can be used to store and retrieve data from a database given just a JDBC URL. You can use any JDBC database, like Postgres, MySQL, Oracle, Sqlite, etc.
 
 ```
-jbang -q jdbc@quarkiverse/quarkus-mcp-servers [jdbcurl]
+jbang -q jdbc@quarkiverse/quarkus-mcp-servers [link=https://youtu.be/E6IJvQZ3MCI]
 ```
 
 See more in the link:jdbc/README.adoc[jdbc readme].

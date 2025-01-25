@@ -7,7 +7,9 @@ Supported databases include PostgresSQL, Oracle, MariaDB, Sqlite and <<jdbc_vari
 
 image::images/jdbc-demo.png[]
 
-image::images/jdbc-trends-demo.png[]
+image::images/jdbc-trends-demo.png[link=https://youtu.be/E6IJvQZ3MCI]
+
+See video https://youtu.be/E6IJvQZ3MCI[here].
 
 == General Usage 
 
