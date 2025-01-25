@@ -1,0 +1,14 @@
+name: checkjbang
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  build:
+    uses: jbanghub/.github/.github/workflows/shared-build.yml@main
+    secrets: inherit
+  
+
