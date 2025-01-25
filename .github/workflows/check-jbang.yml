@@ -18,6 +18,7 @@ jobs:
            jbang trust add https://github.com/quarkiverse/quarkus-mcp-servers/
           
   build:
+    needs: [pretrust]
     uses: jbanghub/.github/.github/workflows/shared-build.yml@main
     secrets: inherit
   
