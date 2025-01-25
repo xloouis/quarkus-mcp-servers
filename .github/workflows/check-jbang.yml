@@ -6,20 +6,11 @@ on:
     - main
   pull_request:
 
-jobs:
-  pretrust:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup JBang
-        uses: jbangdev/setup-jbang@main
-
-      - name: Trust ourselves
-        run: |
-           jbang trust add https://github.com/quarkiverse/quarkus-mcp-servers/
-          
+jobs: 
   build:
-    needs: [pretrust]
     uses: jbanghub/.github/.github/workflows/shared-build.yml@main
     secrets: inherit
+    with:
+      jbang-trust-add: https://github.com/quarkiverse/quarkus-mcp-servers/
   
 
