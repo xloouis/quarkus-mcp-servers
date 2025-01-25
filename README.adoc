@@ -36,7 +36,7 @@ See more in the link:filesystem/README.adoc[filesystem readme].
 
 ### link:jfx[jfx]
 
-image::jfx/images/jfx-demo.png[link=./jfx/images/jfx-demo.mp4]
+image::jfx/images/jfx-demo.png[link=https://www.youtube.com/watch?v=Wnh_-0dAaDI]
 
 The `jfx` server exposes a canvas that can be used to make drawings using JavaFX.
 

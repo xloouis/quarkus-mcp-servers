@@ -7,7 +7,7 @@ The server is implemented using Quarkus MCP and JavaFX.
 
 Initial idea and implementation is from https://gist.github.com/konczdev/5e6774d2d8640bf83baab88cb068bcc2[@konczdev]
 
-image::images/jfx-demo.png[JFX Demo, link=./images/jfx-demo.mp4]
+image::images/jfx-demo.png[JFX Demo, link=https://www.youtube.com/watch?v=Wnh_-0dAaDI]
 
 
 
