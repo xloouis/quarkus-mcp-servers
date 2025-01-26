@@ -69,5 +69,8 @@ jobs:
         with:
           retention-days: 1
           name: native-image-${{ runner.os }}-${{ runner.arch }}
-          path: |
-            **/target/mcp-server-*-${{ runner.os }}-${{ runner.arch }}
+          path: | # TODO: no better way to find the native images?
+            **/target/mcp-server-*-linux-x86_64
+            **/target/mcp-server-*-macos-aarch64
+            **/target/mcp-server-*-macos-x86_64
+            **/target/mcp-server-*-windows-x86_64
