@@ -39,7 +39,7 @@ jobs:
   build-native:
     needs: [ precheck ]
     if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')
-    uses: quarkiverse/quarkus-mcp-servers/.github/workflows/reusable-native-build.yml@main
+    uses: quarkiverse/quarkus-mcp-servers/.github/workflows/reusable-native-build.yaml@main
     with:
       project-version: ${{ needs.precheck.outputs.VERSION }}
 
