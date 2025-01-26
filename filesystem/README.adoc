@@ -41,19 +41,29 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
 
 Using native image, the startup time is almost instant. 
 
-For now you need to build that yourself.
+You can download the native images from the https://github.com/quarkiverse/quarkus-mcp-servers/releases[release page].
 
-`filesystem` server can be compiled to a native executable by running the following commands:
+Then use the executable for your platform in your MCP client.
 
-[source,shell]
+Example for MacOS arm64 (M1, M2, etc.):
+
+[source,json]
 ----
-git clone https://github.com/quarkiverse/quarkus-mcp-servers.git
-sdk install java 21.0.2-graalce
-cd quarkus-mcp-servers/filesystem
-../mvnw package -Dnative -Dquarkus.package.output-name=mcp-server-filesystem
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "jbang",
+      "args": [
+        "mcp-server-filesystem-osx-aarch_64",
+        "[path1]",
+        "[path2]"
+      ]
+    }
+  }
+}
 ----
 
-And then use the executable found in `target/mcp-server-filesystem` when configuring your MCP client.
+You can of course also rename the executable to something else, like `mcp-server-filesystem` if you want.
 
 === Troubleshooting
 
