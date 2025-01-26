@@ -75,7 +75,7 @@ jobs:
         with:
           java-version: '21'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          distribution: mandrel
+          distribution: graalvm-community
           cache: maven
 
       - name: Build
