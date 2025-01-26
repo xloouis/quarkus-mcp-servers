@@ -1,4 +1,4 @@
-name: Early Access
+name: Native Image Build
 
 on:
   push:
@@ -36,39 +36,46 @@ jobs:
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$(echo $VERSION)" >> $GITHUB_OUTPUT
 
-  release:
+  build_jar:
     needs: [ precheck ]
-    if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRO }}
-          cache: maven
+        cache: maven
 
       - name: Build
         run: ./mvnw -ntp -B -Pearlyaccess verify
 
-      - name: Release
-        uses: jreleaser/release-action@v2
-        with:
-          arguments: full-release
-        env:
-          JRELEASER_PROJECT_VERSION: ${{ needs.precheck.outputs.VERSION }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build_native_images:
+    name: 'Build Native Image ${{ matrix.platform }}'
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+        include:
+          - os: 'ubuntu-latest'
+            platform: 'linux-amd64'
+          - os: 'macos-latest'
+            platform: 'darwin-arm64'
+          - os: 'macos-13'
+            platform: 'darwin-amd64'
+          - os: 'windows-latest'
+            platform: 'win-amd64'
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
 
-      - name: JReleaser output
-        if: always()
-        uses: actions/upload-artifact@v4
+      - uses: graalvm/setup-graalvm@v1
         with:
-          name: jreleaser-release
-          path: |
-            out/jreleaser/trace.log
-            out/jreleaser/output.properties
+          java-version: '21'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          distribution: mandrel
+          cache: maven
+
+      - name: Build
+        run: |
+          ./mvnw -pl filesystem -ntp -B -Pearlyaccess -Dnative -DskipTests package
