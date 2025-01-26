@@ -22,3 +22,4 @@ release:
 files:
   globs:
     - pattern: '**/target/mcp-server-*.jar'
+    - pattern: 'native-images/**' # TODO: should put in out or target?

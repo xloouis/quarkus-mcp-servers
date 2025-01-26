@@ -36,8 +36,15 @@ jobs:
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "VERSION=$(echo $VERSION)" >> $GITHUB_OUTPUT
 
-  release:
+  build-native:
     needs: [ precheck ]
+    if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')
+    uses: quarkiverse/quarkus-mcp-servers/.github/workflows/reusable-assemble.yml@main
+    with:
+      project-version: ${{ needs.precheck.outputs.VERSION }}
+
+  release:
+    needs: [ precheck, build-native ]
     if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')
     runs-on: ubuntu-latest
     steps:
@@ -55,6 +62,13 @@ jobs:
 
       - name: Build
         run: ./mvnw -ntp -B -Pearlyaccess verify
+
+      - name: Download native image artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: native-image-*
+          merge-multiple: true
+          path: native-images/ #out/jreleaser/assemble/helloworld/native-image
 
       - name: Release
         uses: jreleaser/release-action@v2
