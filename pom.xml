@@ -41,6 +41,17 @@
         </dependencies>
     </dependencyManagement>
 
+
+<build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.7.0</version>
+      </extension>
+    </extensions>
+</build>
+
 <profiles>
      <profile>
             <id>sse</id>
@@ -77,7 +88,21 @@
             <id>earlyaccess</id>
             <build>
              <finalName>${project.artifactId}</finalName>
-             </build>
+            </build>
+        </profile>
+
+        <profile>
+            <id>native</id>
+            <activation>
+                <property>
+                    <name>native</name>
+                </property>
+            </activation>
+            <properties>
+                <skipITs>false</skipITs>
+                <quarkus.native.enabled>true</quarkus.native.enabled>
+                <quarkus.package.output-name>${project.artifactId}-${os.detected.classifier}</quarkus.package.output-name>
+            </properties>
         </profile>
 </profiles>
 

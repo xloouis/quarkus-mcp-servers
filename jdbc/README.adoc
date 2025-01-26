@@ -191,6 +191,13 @@ Example:
 jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log {mpcalias} jdbc:h2:mem:testdb
 ----
 
+== Native Image/Executable
+
+Although the server can be compiled to a native executable, it is not recommended as then it is not possible to dynamically load the relevant JDBC driver.
+
+You can however compile a server that targets a specific JDBC driver, but that is for now
+left up as an exercise to the reader. If you are interested in this, please open issue or PR.
+
 === How was this made ?
 
 The MCP server uses Quarkus, the Supersonic Subatomic Java Framework and its Model Context Protocol support.
