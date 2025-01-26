@@ -42,7 +42,7 @@ jobs:
     uses: quarkiverse/quarkus-mcp-servers/.github/workflows/reusable-native-build.yaml@main
     with:
       project-version: ${{ needs.precheck.outputs.VERSION }}
-
+      maven-options: '-Pearlyaccess'
   release:
     needs: [ precheck, build-native ]
     if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')

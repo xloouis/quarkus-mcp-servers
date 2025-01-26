@@ -10,6 +10,10 @@ on:
         default: '-pl filesystem'
         required: false
         type: string
+      maven-options:
+        default: ''
+        required: false
+        type: string
       java-version:
         default: '17'
         required: false
@@ -62,7 +66,7 @@ jobs:
           cache: maven
         
       - name: Build
-        run: ./mvnw -ntp -B -Pearlyaccess ${{ inputs.project-list }} -Dnative verify
+        run: ./mvnw -ntp -B ${{inputs.maven-options}} ${{ inputs.project-list }} -Dnative verify
 
       - name: Upload native artifacts
         uses: actions/upload-artifact@v4
