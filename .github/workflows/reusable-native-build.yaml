@@ -1,5 +1,8 @@
 name: Build artifacts
 
+# loosly based on https://github.com/jreleaser/helloworld-java-graalvm
+# modifed to grab multiple target native raw images rather than jpackage.
+
 on:
   workflow_call:
     inputs:
@@ -75,6 +78,6 @@ jobs:
           name: native-image-${{ runner.os }}-${{ runner.arch }}
           path: | # TODO: no better way to find the native images?
             **/target/mcp-server-*-linux-x86_64
-            **/target/mcp-server-*-osx-aarch64
+            **/target/mcp-server-*-osx-aarch_64
             **/target/mcp-server-*-osx-x86_64
             **/target/mcp-server-*-windows-x86_64.exe
