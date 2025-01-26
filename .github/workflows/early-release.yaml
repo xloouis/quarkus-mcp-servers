@@ -77,7 +77,9 @@ jobs:
           cache: maven
 
       - name: Build
-        run: ./mvnw -ntp -B -Pearlyaccess -Dnative -DskipTests package
+        run: |
+          cd quarkus-mcp-servers/filesystem
+          ./mvnw -ntp -B -Pearlyaccess -Dnative -DskipTests package
 
 
   release:
