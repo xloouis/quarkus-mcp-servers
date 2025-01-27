@@ -1,50 +1,50 @@
 # Model Context Protocol Servers in Quarkus/Java
 
-This project contains https://modelcontextprotocol.io/[Model Context Protocol] servers,
-implemented in Java using the https://github.com/quarkiverse/quarkus-mcp-server[Quarkus MCP server framework].
+This project contains [Model Context Protocol](https://modelcontextprotocol.io/) servers,
+implemented in Java using the [Quarkus MCP server framework](https://github.com/quarkiverse/quarkus-mcp-server).
 
 These lets you extend the capabilites of your MCP enabled LLM (Large Language Model) AI applications.
 
 These also work in MCP enabled LLM applications, like Claude Desktop. You can find other clients on
-https://github.com/punkpeye/awesome-mcp-clients[Awesome MCP Clients] page.
+[Awesome MCP Clients](https://github.com/punkpeye/awesome-mcp-clients) page.
 
 ## Servers
 
-### link:jdbc[jdbc]
+### [jdbc](jdbc)
 
-image::jdbc/images/jdbc-trends-demo.png[]
+![](jdbc/images/jdbc-trends-demo.png)
 
 The `jdbc` server can be used to store and retrieve data from a database given just a JDBC URL. You can use any JDBC database, like Postgres, MySQL, Oracle, Sqlite, etc.
 
+```shell
+jbang -q jdbc@quarkiverse/quarkus-mcp-servers
 ```
-jbang -q jdbc@quarkiverse/quarkus-mcp-servers [link=https://youtu.be/E6IJvQZ3MCI]
-```
 
-See more in the link:jdbc/README.adoc[jdbc readme].
+See more in the [jdbc readme](jdbc/README.md).
 
-### link:filesystem[filesystem]
+### [filesystem](filesystem)
 
-image::filesystem/images/filesystem-demo.png[]
+![](filesystem/images/filesystem-demo.png)
 
 The `filesystem` server is a file system server that can be used to serve files from a file system.
 
-```
+```shell
 jbang -q filesystem@quarkiverse/quarkus-mcp-servers [path1] [path2] ...
 ```
 
-See more in the link:filesystem/README.adoc[filesystem readme].
+See more in the [filesystem readme](filesystem/README.md).
 
-### link:jfx[jfx]
+### [jfx](jfx)
 
-image::jfx/images/jfx-demo.png[link=https://www.youtube.com/watch?v=Wnh_-0dAaDI]
+[![](jfx/images/jfx-demo.png)](https://www.youtube.com/watch?v=Wnh_-0dAaDI)
 
 The `jfx` server exposes a canvas that can be used to make drawings using JavaFX.
 
-```
+```shell
 jbang -q jfx@quarkiverse/quarkus-mcp-servers
 ```
 
-See more in the link:jfx/README.adoc[jfx readme].
+See more in the [jfx readme](jfx/README.md).
 
 ## Ideas for other servers
 
@@ -57,6 +57,4 @@ Other ideas:
 - zulip
 - jfr/java hooked to jmx/jfr
 - quarkus dev mode
-- ...
-
-
+- ... 
