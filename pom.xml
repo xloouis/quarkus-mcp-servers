@@ -13,6 +13,7 @@
         <module>jdbc</module>
         <module>filesystem</module>
         <module>jfx</module>
+        <module>kubernetes</module>
 
     </modules>
 
@@ -29,15 +30,15 @@
         <surefire-plugin.version>3.5.0</surefire-plugin.version>
 
 <!--
-         <mcp.server.version>999-SNAPSHOT</mcp.server.version> 
-    -->     
+         <mcp.server.version>999-SNAPSHOT</mcp.server.version>
+    -->
         <mcp.server.version>1.0.0.Alpha6</mcp.server.version>
-       
+
     </properties>
 
     <dependencyManagement>
         <dependencies>
-           
+
         </dependencies>
     </dependencyManagement>
 
@@ -106,4 +107,4 @@
         </profile>
 </profiles>
 
-</project> 
+</project>

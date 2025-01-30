@@ -32,8 +32,12 @@
       "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-jfx.jar",
       "java": "17+",
       "dependencies": ["org.openjfx:javafx-controls:21", "org.openjfx:javafx-graphics:21", "org.openjfx:javafx-swing:21"]
+    },
+    "kubernetes": {
+      "script-ref": "kubernetes/src/main/java/io/quarkus/mcp/servers/kubernetes/MCPServerKubernetes.java",
+      "java": "17+"
     }
-    
+
   },
   "templates": {}
 }

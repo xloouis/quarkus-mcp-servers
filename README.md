@@ -46,6 +46,15 @@ jbang -q jfx@quarkiverse/quarkus-mcp-servers
 
 See more in the [jfx readme](jfx/README.md).
 
+
+### [kubernetes](kubernetes)
+
+The `kubernetes` server can be used to interact with a Kubernetes cluster.
+
+```shell
+jbang -q kubernetes@quarkiverse/quarkus-mcp-servers
+```
+
 ## Ideas for other servers
 
 If you have ideas for other servers, feel free to contribute them to this project.
