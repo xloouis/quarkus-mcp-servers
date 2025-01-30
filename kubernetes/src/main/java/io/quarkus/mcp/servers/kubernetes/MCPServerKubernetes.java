@@ -13,6 +13,8 @@ import io.quarkus.logging.Log;
 import io.quarkus.runtime.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import io.quarkiverse.mcp.server.ToolCallException;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,28 +31,44 @@ public class MCPServerKubernetes {
 
   @Tool(description = "Get the current Kubernetes configuration")
   public String configuration_Get() {
-    return kubernetesClient.getKubernetesSerialization().asJson(kubernetesClient.getConfiguration());
+    try {
+      return kubernetesClient.getKubernetesSerialization().asJson(kubernetesClient.getConfiguration());
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to get configuration: " + e.getMessage(), e);
+    }
   }
 
   @Tool(description = "List all the Kubernetes namespaces in the current cluster")
   public String namespaces_list() {
-    return kubernetesClient.getKubernetesSerialization().asJson(
-      kubernetesClient.namespaces().list().getItems()
-    );
+    try {
+      return kubernetesClient.getKubernetesSerialization().asJson(
+        kubernetesClient.namespaces().list().getItems()
+      );
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to list namespaces: " + e.getMessage(), e);
+    }
   }
 
   @Tool(description = "List all the Kubernetes pods in the current cluster")
   public String pods_list() {
-    return kubernetesClient.getKubernetesSerialization().asJson(
-      kubernetesClient.pods().list().getItems()
-    );
+    try {
+      return kubernetesClient.getKubernetesSerialization().asJson(
+        kubernetesClient.pods().list().getItems()
+      );
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to list pods: " + e.getMessage(), e);
+    }
   }
 
   @Tool(description = "List all the Kubernetes pods in the specified namespace in the current cluster")
   public String pods_list_in_namespace(@ToolArg(description = "Namespace to list pods from") String namespace) {
-    return kubernetesClient.getKubernetesSerialization().asJson(
-      kubernetesClient.pods().inNamespace(namespace).list().getItems()
-    );
+    try { 
+      return kubernetesClient.getKubernetesSerialization().asJson(
+        kubernetesClient.pods().inNamespace(namespace).list().getItems()
+      );
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to list pods in namespace: " + e.getMessage(), e);
+    }
   }
 
   @Tool(description = "Run a Pod in the current namespace with the provided container image and optional name")
@@ -59,6 +77,7 @@ public class MCPServerKubernetes {
     @ToolArg(description = "Container Image to run in the Pod") String image,
     @ToolArg(description = "Name of the Pod", required = false) String name
   ) {
+    try {
     return kubernetesClient.getKubernetesSerialization().asJson(
       kubernetesClient.run()
         .inNamespace(namespace == null ? kubernetesClient.getNamespace() : namespace)
@@ -69,10 +88,13 @@ public class MCPServerKubernetes {
         .addToLabels("k8s.io/created-by", "mcp-kubernetes")
         .done()
     );
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to run pod: " + e.getMessage(), e);
+    }
   }
 
   @Tool(description = "Delete a Pod in the current namespace with the provided name")
-  public ToolResponse pods_delete(
+  public String pods_delete(
     @ToolArg(description = "Namespace to delete the Pod from", required = false) String namespace,
     @ToolArg(description = "Name of the Pod to delete") String name
   ) {
@@ -83,8 +105,8 @@ public class MCPServerKubernetes {
         .withTimeout(10, TimeUnit.SECONDS)
         .delete();
     } catch (Exception e) {
-      return ToolResponse.error("Failed to delete Pod: " + e.getMessage());
+      throw new ToolCallException("Failed to delete Pod: " + e.getMessage(), e);
     }
-    return ToolResponse.success("Pod deleted successfully");
+    return "Pod deleted successfully";
   }
 }

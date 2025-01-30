@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       project-list:
-        default: '-pl filesystem'
+        default: '-pl filesystem,kubernetes'
         required: false
         type: string
       maven-options:
