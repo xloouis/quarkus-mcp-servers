@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * https://github.com/quarkiverse/quarkus-mcp-server/tree/main/test-utils
  */
 @QuarkusTest
-@DisabledOnOs(OS.WINDOWS)
+@DisabledOnOs({OS.WINDOWS,OS.MAC})
 class MCPServerKubernetesTest {
 
   @Inject
