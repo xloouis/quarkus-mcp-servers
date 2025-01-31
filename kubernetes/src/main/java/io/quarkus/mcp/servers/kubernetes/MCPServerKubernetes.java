@@ -8,7 +8,6 @@ package io.quarkus.mcp.servers.kubernetes;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
-import io.quarkiverse.mcp.server.ToolResponse;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -30,7 +29,7 @@ public class MCPServerKubernetes {
   }
 
   @Tool(description = "Get the current Kubernetes configuration")
-  public String configuration_Get() {
+  public String configuration_get() {
     try {
       return kubernetesClient.getKubernetesSerialization().asJson(kubernetesClient.getConfiguration());
     } catch (Exception e) {
@@ -62,7 +61,7 @@ public class MCPServerKubernetes {
 
   @Tool(description = "List all the Kubernetes pods in the specified namespace in the current cluster")
   public String pods_list_in_namespace(@ToolArg(description = "Namespace to list pods from") String namespace) {
-    try { 
+    try {
       return kubernetesClient.getKubernetesSerialization().asJson(
         kubernetesClient.pods().inNamespace(namespace).list().getItems()
       );
@@ -78,16 +77,16 @@ public class MCPServerKubernetes {
     @ToolArg(description = "Name of the Pod", required = false) String name
   ) {
     try {
-    return kubernetesClient.getKubernetesSerialization().asJson(
-      kubernetesClient.run()
-        .inNamespace(namespace == null ? kubernetesClient.getNamespace() : namespace)
-        .withName(name == null ? "mcp-kubernetes-pod-" + System.currentTimeMillis() : name)
-        .withImage(image)
-        .withNewRunConfig()
-        .addToLabels("app", "mcp-kubernetes")
-        .addToLabels("k8s.io/created-by", "mcp-kubernetes")
-        .done()
-    );
+      return kubernetesClient.getKubernetesSerialization().asJson(
+        kubernetesClient.run()
+          .inNamespace(namespace == null ? kubernetesClient.getNamespace() : namespace)
+          .withName(name == null ? "mcp-kubernetes-pod-" + System.currentTimeMillis() : name)
+          .withImage(image)
+          .withNewRunConfig()
+          .addToLabels("app", "mcp-kubernetes")
+          .addToLabels("k8s.io/created-by", "mcp-kubernetes")
+          .done()
+      );
     } catch (Exception e) {
       throw new ToolCallException("Failed to run pod: " + e.getMessage(), e);
     }
