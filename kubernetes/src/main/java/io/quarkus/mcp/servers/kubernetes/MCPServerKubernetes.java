@@ -3,7 +3,7 @@ package io.quarkus.mcp.servers.kubernetes;
 //JAVA 17+
 //DEPS io.quarkus:quarkus-bom:3.17.6@pom
 //DEPS io.quarkus:quarkus-kubernetes-client
-//DEPS io.quarkiverse.mcp:quarkus-mcp-server-stdio:1.0.0.Alpha5
+//DEPS io.quarkiverse.mcp:quarkus-mcp-server-stdio:1.0.0.Beta1
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.quarkiverse.mcp.server.Tool;

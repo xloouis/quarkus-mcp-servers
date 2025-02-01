@@ -33,7 +33,7 @@
 <!--
          <mcp.server.version>999-SNAPSHOT</mcp.server.version>
     -->
-        <mcp.server.version>1.0.0.Alpha6</mcp.server.version>
+        <mcp.server.version>1.0.0.Beta1</mcp.server.version>
 
     </properties>
 
