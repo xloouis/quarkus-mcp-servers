@@ -34,11 +34,19 @@
          <mcp.server.version>999-SNAPSHOT</mcp.server.version>
     -->
         <mcp.server.version>1.0.0.Beta1</mcp.server.version>
+        <langchain4j.version>1.0.0-alpha1</langchain4j.version>
 
     </properties>
 
     <dependencyManagement>
         <dependencies>
+          <dependency>
+            <!-- Used to generate MCP clients in Integration Tests -->
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-mcp</artifactId>
+            <version>${langchain4j.version}</version>
+            <scope>test</scope>
+          </dependency>
           <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
