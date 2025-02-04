@@ -15,14 +15,14 @@ See demo video [here](https://youtu.be/JZn7fUKbRHU).
 
 For now this server uses your already configured Kubernetes configuration. Thus make sure you have a valid kubeconfig that has a valid context setup.
 
-## Claude Desktop Config and [mcp-cli](https://github.com/chrishayuk/mcp-cli)
+## Claude Desktop Config and [mcp-cli](https://github.com/chrishayuk/mcp-cli) <a id="claude-desktop-config"/>
 
 Add this to your `claude_desktop.json` or `server_config.json` file:
 
 ```json
 {
   "mcpServers": {
-    "jfx": {
+    "kubernetes": {
       "command": "jbang",
       "args": [
         "kubernetes@quarkiverse/quarkus-mcp-servers"
@@ -47,7 +47,7 @@ Example for MacOS arm64 (M1, M2, etc.):
 ```json
 {
   "mcpServers": {
-    "filesystem": {
+    "kubernetes": {
       "command": "jbang",
       "args": [
         "mcp-server-kubernetes-osx-aarch_64"
