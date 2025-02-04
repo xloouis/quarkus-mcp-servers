@@ -6,7 +6,9 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.mcp.client.DefaultMcpClient;
 import dev.langchain4j.mcp.client.McpClient;
 import dev.langchain4j.mcp.client.transport.stdio.StdioMcpTransport;
+import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceBuilder;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.server.mock.KubernetesCrudDispatcher;
@@ -79,9 +81,11 @@ public class MCPServerKubernetesIT {
   @ValueSource(strings = {
     "configuration_get",
     "namespaces_list",
-    "pods_delete",
     "pods_list",
     "pods_list_in_namespace",
+    "pods_get",
+    "pods_log",
+    "pods_delete",
     "pods_run"
   })
   public void tools(String toolName) {
@@ -90,20 +94,16 @@ public class MCPServerKubernetesIT {
       .contains(toolName);
   }
 
-  @Nested
-  class NamespaceOperations {
-
-    @Test
-    void namespaces_list() {
-      kubernetesClient.namespaces()
-        .resource(new NamespaceBuilder().withNewMetadata().withName("a-namespace-to-list").endMetadata().build())
-        .create();
-      assertThat(client.executeTool(ToolExecutionRequest.builder().name("namespaces_list").arguments("{}").build()))
-        .isNotBlank()
-        .satisfies(nsList -> assertThat(kubernetesClient.getKubernetesSerialization().unmarshal(nsList, List.class))
-          .extracting("metadata.name")
-          .contains("a-namespace-to-list"));
-    }
+  @Test
+  void namespaces_list() {
+    kubernetesClient.namespaces()
+      .resource(new NamespaceBuilder().withNewMetadata().withName("a-namespace-to-list").endMetadata().build())
+      .create();
+    assertThat(client.executeTool(ToolExecutionRequest.builder().name("namespaces_list").arguments("{}").build()))
+      .isNotBlank()
+      .satisfies(nsList -> assertThat(unmarshalList(nsList, Namespace.class))
+        .extracting("metadata.name")
+        .contains("a-namespace-to-list"));
   }
 
   @Nested
@@ -116,10 +116,35 @@ public class MCPServerKubernetesIT {
         .create();
       assertThat(client.executeTool(ToolExecutionRequest.builder().name("pods_list").arguments("{}").build()))
         .isNotBlank()
-        .satisfies(pList -> assertThat(kubernetesClient.getKubernetesSerialization().unmarshal(pList, List.class))
+        .satisfies(pList -> assertThat(unmarshalList(pList, Pod.class))
           .extracting("metadata.name")
           .contains("a-pod-to-list"));
     }
+
+    @Test
+    void pods_get() {
+      kubernetesClient.pods()
+        .resource(new PodBuilder()
+          .withNewMetadata().withName("a-pod-to-get").endMetadata()
+          .withNewSpec().withServiceAccount("default").endSpec()
+          .build())
+        .create();
+      final var response = client.executeTool(ToolExecutionRequest.builder().name("pods_get").arguments("{\"name\":\"a-pod-to-get\"}").build());
+      assertThat(response)
+        .isNotBlank()
+        .satisfies(p -> assertThat(unmarshal(p, Pod.class))
+          .extracting("metadata.name", "spec.serviceAccount")
+          .contains("a-pod-to-get", "default"));
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> List<T> unmarshalList(String json, Class<T> clazz) {
+    return kubernetesClient.getKubernetesSerialization().unmarshal(json, List.class);
+  }
+
+  private <T> T unmarshal(String json, Class<T> clazz) {
+    return kubernetesClient.getKubernetesSerialization().unmarshal(json, clazz);
   }
 
 }
