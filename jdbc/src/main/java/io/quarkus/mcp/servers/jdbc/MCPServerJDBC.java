@@ -91,7 +91,6 @@ public class MCPServerJDBC {
     String list_tables(McpLog log) {
         log.debug("Listing tables");
         log.error("Listing tables");
-        System.err.println("Listing tables (stderr)");
         try (Connection conn = getConnection()) {
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});

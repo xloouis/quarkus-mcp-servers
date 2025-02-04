@@ -108,4 +108,40 @@
     </build>
 
    
+    <profiles>
+        <profile>
+            <id>h2</id>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-jdbc-h2</artifactId>
+                </dependency>
+            </dependencies>
+            <properties>
+                <jvm.args>-Djdbc.url=jdbc:h2:mem:testdb</jvm.args>
+            </properties>
+        </profile>
+        <profile>
+            <id>postgresql</id>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-jdbc-postgresql</artifactId>
+                </dependency>
+            </dependencies>
+            <!-- assume running container with postgres : i.e. podman run -p 5432:5432 -d sakiladb/postgres:latest-->
+            <properties>
+                <jvm.args>-Djdbc.url=jdbc:postgresql://localhost:5432/sakila?user=sakila&amp;password=p_ssW0rd</jvm.args>
+            </properties>
+        </profile>
+        <profile>
+            <id>sqlite</id>
+            <dependencies>
+                <dependency>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-jdbc-sqlite</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
