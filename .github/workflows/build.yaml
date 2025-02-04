@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '.gitignore'
+      - 'LICENSE'
+      - '*.md'
+  pull_request:
+    paths-ignore:
+      - '.gitignore'
+      - 'LICENSE'
+      - '*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRAAL_VERSION: '21.0.2'
+  GRAAL_DISTRO: graalvm-community
+  JAVA_VERSION: '21'
+  JAVA_DISTRO: 'temurin'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: 'Build on ${{ matrix.os }} (Native: ${{ matrix.native }})'
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest #x64
+          - ubuntu-24.04-arm #arm64
+          - windows-latest #x64
+          - macos-13 #x64
+          - macos-latest #arm64
+        native: [false, true]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRO }}
+          cache: maven
+      - name: Setup Graal
+        uses: graalvm/setup-graalvm@v1
+        with:
+          version: ${{ env.GRAAL_VERSION }}
+          java-version: ${{ env.JAVA_VERSION }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          distribution: ${{ env.GRAAL_DISTRO }}
+        if: matrix.native == true
+      - name: Build
+        run: ./mvnw -ntp -B verify
+        if: matrix.native == false
+      - name: Build Native (except jfx)
+        run: ./mvnw -ntp -B -Dnative=${{ matrix.native }} -pl '!jfx' verify
+        if: matrix.native == true
