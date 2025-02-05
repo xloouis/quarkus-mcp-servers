@@ -15,7 +15,7 @@ Below are examples of command lines to use for configuring the server.
 Start server:
 
 ```shell
-jbang mcp-server-{baseName}@quarkusio
+jbang {baseName}@quarkiverse/quarkus-mcp-servers
 ```
 
 ## Components

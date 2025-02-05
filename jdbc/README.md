@@ -20,25 +20,25 @@ Below are examples of command lines to use for configuring the server.
 Start with an empty database (in-memory h2 database):
 
 ```shell
-jbang mcp-server-jdbc@quarkusio
+jbang jdbc@quarkiverse/quarkus-mcp-servers
 ```
 
 A live database (any common JDBC compatible database):
 
 ```shell
-jbang mcp-server-jdbc@quarkusio [jdbc_url]
+jbang jdbc@quarkiverse/quarkus-mcp-servers [jdbc_url]
 ```
 
 For example, to connect to a already running Oracle database:
 
 ```shell
-jbang mcp-server-jdbc@quarkusio jdbc:oracle:thin:@localhost:1521:orcl
+jbang jdbc@quarkiverse/quarkus-mcp-servers jdbc:oracle:thin:@localhost:1521:orcl
 ```
 
 You can also specify a user and password separately, here for a PostgreSQL database:
 
 ```shell
-jbang mcp-server-jdbc@quarkusio jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
+jbang jdbc@quarkiverse/quarkus-mcp-servers jdbc:postgresql://localhost:5432/sakila -u sakila -p p_ssW0rd
 ```
 
 ## Downloadable databases
@@ -50,7 +50,7 @@ That is done using the %{url} syntax.
 Following is an example of how to connect to a Chinook database in SQLite, downloading the `Chinook_Sqlite.sqlite` file from github.
 
 ```shell
-jbang mcp-server-jdbc@quarkusio jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
+jbang jdbc@quarkiverse/quarkus-mcp-servers jdbc:sqlite:%{https://github.com/lerocha/chinook-database/raw/master/ChinookDatabase/DataSources/Chinook_Sqlite.sqlite}
 ```
 
 There are interesting examples of sample data available online you can use to explore data.
@@ -124,7 +124,7 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
     "jdbc": {
       "command": "jbang",
       "args": [
-        "mcp-server-jdbc@quarkusio",
+        "jdbc@quarkiverse/quarkus-mcp-servers",
         "[jdbc_url]"
       ]
     }
@@ -149,7 +149,7 @@ To get more detailed logging you can add the following parameters to the jbang c
 Example:
 
 ```shell
-jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log mcp-server-jdbc@quarkusio jdbc:h2:mem:testdb
+jbang -Dquarkus.log.file.enable=true -Dquarkus.log.file.path=${user.home}/mcp-server-jdbc.log jdbc@quarkiverse/quarkus-mcp-servers jdbc:h2:mem:testdb
 ```
 
 ## Native Image/Executable
