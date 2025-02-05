@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 /**
  * Basic unit test suite for the {@link MCPServerKubernetes} class.
@@ -122,7 +123,7 @@ class MCPServerKubernetesTest {
 
     @Test
     void pods_run_startsPod() {
-      server.pods_run("default", "a-pod-to-run", "busybox");
+      server.pods_run("default", "a-pod-to-run", "busybox", null);
       assertThat(kubernetesClient.pods().inNamespace("default").withName("a-pod-to-run")
         .waitUntilCondition(Objects::nonNull, 10, TimeUnit.SECONDS))
         .isNotNull()
@@ -131,9 +132,11 @@ class MCPServerKubernetesTest {
 
     @Test
     void pods_run_returnsPodInfo() {
-      assertThat(unmarshal(server.pods_run("default", "a-pod-to-run-2", "busybox"), Pod.class))
-        .extracting("metadata.name")
-        .isEqualTo("a-pod-to-run-2");
+      assertThat(unmarshalList(server.pods_run("default", "a-pod-to-run-2", "busybox", null), Pod.class))
+        .extracting("kind", "metadata.name")
+        .contains(
+          tuple("Pod", "a-pod-to-run-2")
+        );
     }
   }
 
