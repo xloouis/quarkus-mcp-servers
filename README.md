@@ -67,3 +67,44 @@ Other ideas:
 - jfr/java hooked to jmx/jfr
 - quarkus dev mode
 - ... 
+
+## Contributing
+
+If you have ideas for other servers, feel free to contribute them to this project.
+
+To get started, clone the repository and build it:
+
+```bash
+git clone https://github.com/quarkiverse/quarkus-mcp-servers
+cd quarkus-mcp-servers
+mvn clean install
+```
+
+Then run the following command to generate a new server for i.e. jfr:
+
+```shell
+mkdir jfr
+cd jfr
+jbang -t mcp jfr
+```
+
+This will create the `jfr` directory with a Hello World MCP server.
+
+You can then build it:
+
+```shell
+mvn clean install
+```
+
+To wire it into the full project you need to add `<module>jfr</module>` to the root `pom.xml` file.
+
+Make sure you have added some useful content to the `README.md` file + updated the demo image.
+
+Then open a PR :)
+
+
+
+
+
+
+
