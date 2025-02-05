@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       project-list:
-        default: '-pl filesystem,kubernetes'
+        default: '-pl shared,filesystem,kubernetes'
         required: false
         type: string
       maven-options:
@@ -60,14 +60,14 @@ jobs:
           java-version: ${{ inputs.graal-java-version }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           distribution: ${{ inputs.graal-distro }}
-          
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.java-version }}
           distribution: ${{ inputs.java-distro }}
           cache: maven
-        
+
       - name: Build
         run: ./mvnw -ntp -B ${{inputs.maven-options}} ${{ inputs.project-list }} -Dnative verify
 
