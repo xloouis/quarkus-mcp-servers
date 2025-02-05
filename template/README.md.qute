@@ -1,8 +1,8 @@
-# Model Context Protocol Server for \{baseName\}
+# Model Context Protocol Server for {baseName}
 
-This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to work with {basename}.
+This Model Context Protocol(MCP) server enables Large Language Models (LLMs) to work with {baseName}.
 
-![](images/\{basename\}-demo.png)
+![](images/{baseName}-demo.png)
 
 
 ## General Usage 
@@ -15,7 +15,7 @@ Below are examples of command lines to use for configuring the server.
 Start server:
 
 ```shell
-jbang mcp-server-{basename}@quarkusio
+jbang mcp-server-{baseName}@quarkusio
 ```
 
 ## Components
@@ -40,7 +40,7 @@ Add this to your `claude_desktop.json` or `server_config.json` file:
     "jdbc": {
       "command": "jbang",
       "args": [
-        "mcp-server-{basename}@quarkiverse/quarkus-mcp-server"
+        "mcp-server-{baseName}@quarkiverse/quarkus-mcp-server"
       ]
     }
   }
