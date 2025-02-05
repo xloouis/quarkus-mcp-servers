@@ -55,6 +55,16 @@ The `kubernetes` server can be used to interact with a Kubernetes cluster.
 jbang -q kubernetes@quarkiverse/quarkus-mcp-servers
 ```
 
+## Other Quarkus MCP based servers
+
+### [WildFly](https://github.com/wildfly-extras/wildfly-mcp)
+
+A WildFly MCP server that allows you to interact with WildFly running servers.
+
+You can check this [WildFly vlog](https://youtu.be/wg1hAdOoe2w) that demonstrates its capabilities.
+
+Read more in the [WildFly MCP Server readme](https://github.com/wildfly-extras/wildfly-mcp/blob/main/wildfly-mcp-server/README.md).
+
 ## Ideas for other servers
 
 If you have ideas for other servers, feel free to contribute them to this project.
