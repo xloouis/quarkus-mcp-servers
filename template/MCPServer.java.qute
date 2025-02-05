@@ -1,0 +1,25 @@
+package io.quarkus.mcp.servers.{baseName};
+
+import io.quarkiverse.mcp.server.Prompt;
+import io.quarkiverse.mcp.server.PromptArg;
+import io.quarkiverse.mcp.server.PromptMessage;
+import io.quarkiverse.mcp.server.TextContent;
+import io.quarkiverse.mcp.server.Tool;
+import io.quarkiverse.mcp.server.ToolArg;
+
+public class MCPServer{baseName} {
+    
+    @Tool(description = "Say hello")
+    String hello(@ToolArg(description = "Who you want to be greeted") String who) {
+        return "Hello " + who;
+    }
+ 
+    @Prompt(description = "Make a greeting") 
+    PromptMessage make_greeting(@PromptArg(description = "Who you want to be greeted") String who) { 
+        return PromptMessage.withUserRole(new TextContent(
+            """
+            The assistants goal is to greet the user {who}
+            """
+        ));
+    }
+}
