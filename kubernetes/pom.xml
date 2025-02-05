@@ -29,6 +29,11 @@
 
     <dependencies>
         <dependency>
+        <groupId>io.quarkus.mcp.servers</groupId>
+    <artifactId>mcp-server-shared</artifactId>
+       <version>${version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-kubernetes-client</artifactId>
         </dependency>

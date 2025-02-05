@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>shared</module>
         <module>jdbc</module>
         <module>filesystem</module>
         <module>jfx</module>
@@ -53,9 +54,23 @@
             <version>${assertj.version}</version>
             <scope>test</scope>
           </dependency>
+          
         </dependencies>
     </dependencyManagement>
 
+<!-- TODO: should this be moved to each module instead?-->
+<dependencies>
+          <dependency>
+            <groupId>io.quarkiverse.mcp</groupId>
+            <artifactId>quarkus-mcp-server-stdio</artifactId>
+            <version>${mcp.server.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.quarkiverse.mcp</groupId>
+            <artifactId>quarkus-mcp-server-sse</artifactId>
+            <version>${mcp.server.version}</version>
+          </dependency>
+</dependencies>
 
 <build>
     <extensions>
