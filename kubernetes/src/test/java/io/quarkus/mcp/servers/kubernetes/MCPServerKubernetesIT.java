@@ -6,6 +6,8 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.mcp.client.McpClient;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceBuilder;
+import io.fabric8.kubernetes.api.model.Node;
+import io.fabric8.kubernetes.api.model.NodeBuilder;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import static io.quarkus.mcp.servers.kubernetes.MCPTestUtils.initMcpClient;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 public class MCPServerKubernetesIT {
 
@@ -77,18 +80,37 @@ public class MCPServerKubernetesIT {
   }
 
   @Nested
+  class GenericResourceOperations {
+
+    @Test
+    void resources_list_clusterScoped() {
+      kubernetesClient.nodes()
+        .resource(new NodeBuilder().withNewMetadata().withName("a-node-to-list").endMetadata().build())
+        .create();
+      assertThat(client.executeTool(ToolExecutionRequest.builder().name("resources_list")
+        .arguments("{\"apiVersion\":\"v1\",\"kind\":\"Node\"}").build()))
+        .isNotBlank()
+        .satisfies(pList -> assertThat(unmarshalList(pList, Node.class))
+          .extracting("kind", "metadata.name")
+          .contains(tuple("Node", "a-node-to-list")));
+    }
+  }
+
+  @Nested
   class PodOperations {
 
     @Test
     void pods_list() {
-      kubernetesClient.pods()
-        .resource(new PodBuilder().withNewMetadata().withName("a-pod-to-list").endMetadata().build())
-        .create();
+      for (int it = 0; it < 3; it++) {
+        kubernetesClient.pods()
+          .resource(new PodBuilder().withNewMetadata().withName("a-pod-to-list-" + it).endMetadata().build())
+          .create();
+      }
       assertThat(client.executeTool(ToolExecutionRequest.builder().name("pods_list").arguments("{}").build()))
         .isNotBlank()
         .satisfies(pList -> assertThat(unmarshalList(pList, Pod.class))
           .extracting("metadata.name")
-          .contains("a-pod-to-list"));
+          .contains("a-pod-to-list-1", "a-pod-to-list-2"));
     }
 
     @Test
