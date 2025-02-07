@@ -55,6 +55,76 @@ public class MCPServerKubernetes {
     }
   }
 
+  @Tool(description = "List Kubernetes resources in the current cluster by providing their apiVersion and kind and optionally the namespace")
+  public String resources_list(
+    @ToolArg(description = "apiVersion of the resources (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1") String apiVersion,
+    @ToolArg(description = "kind of the resources (examples of valid kind are: Pod, Service, Deployment, Ingress)") String kind,
+    @ToolArg(description = "Namespace to retrieve the namespaced resources from (ignored in case of cluster scoped resources)", required = false) String namespace
+  ) {
+    try {
+      final var resource = kubernetesClient.genericKubernetesResources(apiVersion, kind);
+      if (namespace != null && !namespace.isBlank()) {
+        return asJson(resource.inNamespace(namespace).list().getItems());
+      }
+      try {
+        return asJson(resource.inAnyNamespace().list().getItems());
+      } catch (Exception e) {
+        return asJson(resource.list().getItems());
+      }
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to get resources for " + apiVersion + " " + kind + ": " + e.getMessage(), e);
+    }
+  }
+
+  @Tool(description = "Get a Kubernetes resource in the current cluster by providing its apiVersion, kind, optionally the namespace, and its name")
+  public String resources_get(
+    @ToolArg(description = "apiVersion of the resources (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1") String apiVersion,
+    @ToolArg(description = "kind of the resources (examples of valid kind are: Pod, Service, Deployment, Ingress)") String kind,
+    @ToolArg(description = "Namespace to retrieve the namespaced resource from (ignored in case of cluster scoped resources)", required = false) String namespace,
+    @ToolArg(description = "Name of the resource", required = false) String name
+  ) {
+    try {
+      return asJson(
+        kubernetesClient.genericKubernetesResources(apiVersion, kind)
+          .inNamespace(namespace == null ? kubernetesClient.getNamespace() : namespace)
+          .withName(name)
+          .get()
+      );
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to get the resource for " + apiVersion + " " + kind + ": " + e.getMessage(), e);
+    }
+  }
+
+  @Tool(description = "Create or update a Kubernetes resource in the current cluster by providing a YAML or JSON representation of the resource")
+  public String resources_create_or_update(
+    @ToolArg(description = "A JSON or YAML containing a representation of the Kubernetes resource. Should include top-level fields such as apiVersion,kind,metadata, and spec") String resource
+  ) {
+    try {
+      return asJson(kubernetesClient.resource(resource).createOr(NonDeletingOperation::update));
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to create or update the resource: " + e.getMessage(), e);
+    }
+  }
+
+  @Tool(description = "Delete a Kubernetes resource in the current cluster by providing its apiVersion, kind, optionally the namespace, and its name")
+  public String resources_delete(
+    @ToolArg(description = "apiVersion of the resources (examples of valid apiVersion are: v1, apps/v1, networking.k8s.io/v1") String apiVersion,
+    @ToolArg(description = "kind of the resources (examples of valid kind are: Pod, Service, Deployment, Ingress)") String kind,
+    @ToolArg(description = "Namespace to retrieve the namespaced resource from (ignored in case of cluster scoped resources)", required = false) String namespace,
+    @ToolArg(description = "Name of the resource", required = false) String name
+  ) {
+    try {
+      kubernetesClient.genericKubernetesResources(apiVersion, kind)
+        .inNamespace(namespace == null ? kubernetesClient.getNamespace() : namespace)
+        .withName(name)
+        .withTimeout(10, TimeUnit.SECONDS)
+        .delete();
+      return "Resource deleted successfully";
+    } catch (Exception e) {
+      throw new ToolCallException("Failed to delete the resource for " + apiVersion + " " + kind + ": " + e.getMessage(), e);
+    }
+  }
+
   @Tool(description = "List all the Kubernetes namespaces in the current cluster")
   public String namespaces_list() {
     try {
