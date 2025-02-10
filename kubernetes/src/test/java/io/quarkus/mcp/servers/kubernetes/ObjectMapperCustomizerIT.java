@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-import static io.quarkus.mcp.servers.kubernetes.MCPTestUtils.initMcpClient;
+import static io.quarkus.mcp.servers.kubernetes.MCPTestUtils.initMcpStdioClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ObjectMapperCustomizerIT {
@@ -38,7 +38,7 @@ public class ObjectMapperCustomizerIT {
       new MockWebServer(), responses, new KubernetesMixedDispatcher(responses), true);
     mockServer.init();
     kubernetesClient = mockServer.createClient();
-    client = initMcpClient(kubernetesClient.getConfiguration().getMasterUrl());
+    client = initMcpStdioClient(kubernetesClient.getConfiguration().getMasterUrl());
   }
 
   @AfterAll

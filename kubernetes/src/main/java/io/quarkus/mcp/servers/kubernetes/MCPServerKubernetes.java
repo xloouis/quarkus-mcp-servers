@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("unused")
 @ApplicationScoped
 public class MCPServerKubernetes {
 

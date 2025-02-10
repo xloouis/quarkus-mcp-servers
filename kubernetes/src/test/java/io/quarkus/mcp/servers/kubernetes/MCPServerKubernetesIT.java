@@ -25,7 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.List;
 
-import static io.quarkus.mcp.servers.kubernetes.MCPTestUtils.initMcpClient;
+import static io.quarkus.mcp.servers.kubernetes.MCPTestUtils.initMcpStdioClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -41,7 +41,7 @@ public class MCPServerKubernetesIT {
       new MockWebServer(), new HashMap<>(), new KubernetesCrudDispatcher(), true);
     mockServer.init();
     kubernetesClient = mockServer.createClient();
-    client = initMcpClient(kubernetesClient.getConfiguration().getMasterUrl());
+    client = initMcpStdioClient(kubernetesClient.getConfiguration().getMasterUrl());
   }
 
   @AfterAll
