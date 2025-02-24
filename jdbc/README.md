@@ -116,7 +116,7 @@ Below are the MCP components provided by this server.
 
 ## Claude Desktop Config and [mcp-cli](https://github.com/chrishayuk/mcp-cli)
 
-Add this to your `claude_desktop.json` or `server_config.json` file:
+Add this to your `claude_desktop_config.json` or `server_config.json` file:
 
 ```json
 {

@@ -17,7 +17,7 @@ For now this server uses your already configured Kubernetes configuration. Thus 
 
 ## Claude Desktop Config and [mcp-cli](https://github.com/chrishayuk/mcp-cli) <a id="claude-desktop-config"/>
 
-Add this to your `claude_desktop.json` or `server_config.json` file:
+Add this to your `claude_desktop_config.json` or `server_config.json` file:
 
 ```json
 {
