@@ -3,7 +3,7 @@
 This project contains [Model Context Protocol](https://modelcontextprotocol.io/) servers,
 implemented in Java using the [Quarkus MCP server framework](https://github.com/quarkiverse/quarkus-mcp-server).
 
-These lets you extend the capabilites of your MCP enabled LLM (Large Language Model) AI applications.
+These lets you extend the capabilities of your MCP enabled LLM (Large Language Model) AI applications.
 
 These also work in MCP enabled LLM applications, like Claude Desktop. You can find other clients on
 [Awesome MCP Clients](https://github.com/punkpeye/awesome-mcp-clients) page.
