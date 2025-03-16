@@ -5,8 +5,8 @@ package io.quarkus.mcp.servers.jfx;
 //DEPS org.openjfx:javafx-graphics:21:${os.detected.jfxname}
 //DEPS org.openjfx:javafx-swing:21:${os.detected.jfxname}
 //DEPS io.quarkiverse.fx:quarkus-fx:0.9.1
-//DEPS io.quarkus:quarkus-bom:3.18.1@pom
-//DEPS io.quarkiverse.mcp:quarkus-mcp-server-stdio:1.0.0.Beta1
+//DEPS io.quarkus:quarkus-bom:3.19.2@pom
+//DEPS io.quarkiverse.mcp:quarkus-mcp-server-stdio:1.0.0.Beta5
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
