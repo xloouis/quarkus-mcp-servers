@@ -42,7 +42,7 @@
       "java": "17+"
     },
     "kubernetes": {
-      "script-ref": "kubernetes/src/main/java/io/quarkus/mcp/servers/kubernetes/MCPServerKubernetes.java",
+      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-kubernetes.jar",
       "java": "17+"
     }
   },
