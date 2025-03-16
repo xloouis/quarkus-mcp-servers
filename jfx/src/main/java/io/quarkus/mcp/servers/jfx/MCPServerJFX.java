@@ -24,9 +24,9 @@ import io.quarkiverse.mcp.server.ImageContent;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;
+import io.quarkiverse.mcp.server.WrapBusinessError;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
@@ -44,6 +44,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 @ApplicationScoped
+@WrapBusinessError(java.lang.IllegalStateException.class)
 public class MCPServerJFX {
     Stage stage;
     private static Canvas canvas;
