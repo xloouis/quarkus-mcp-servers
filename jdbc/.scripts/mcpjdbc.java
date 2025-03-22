@@ -88,6 +88,8 @@ class jdbc implements Callable<Integer> {
 
         command.add(jbangcmd);
         command.add("--quiet");
+        command.add("--java");
+        command.add("17+");
         command.add("--deps");
         command.add(String.join(",", driverDependency));
 
