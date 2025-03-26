@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.quarkiverse.mcp.servers</groupId>
         <artifactId>mcp-servers-parent</artifactId>
-        <version>0.0.4</version>
+        <version>999-SNAPSHOT</version>
     </parent>
 
     <name>MCP Servers :: JFX</name>
