@@ -11,7 +11,7 @@
 
     <groupId>io.quarkiverse.mcp.servers</groupId>
     <artifactId>mcp-servers-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>0.0.4</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -29,7 +29,7 @@
         <connection>scm:git:git@github.com:quarkiverse/quarkus-mcp-servers.git</connection>
         <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-mcp-servers.git</developerConnection>
         <url>https://github.com/quarkiverse/quarkus-mcp-servers</url>
-        <tag>HEAD</tag>
+        <tag>0.0.4</tag>
     </scm>
 
     <properties>
