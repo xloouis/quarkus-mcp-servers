@@ -9,7 +9,7 @@
     <name>MCP Servers :: Parent</name>
     <groupId>io.quarkiverse.mcp.servers</groupId>
     <artifactId>mcp-servers-parent</artifactId>
-    <version>999-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -139,4 +139,8 @@
             </properties>
         </profile>
     </profiles>
+
+  <scm>
+    <tag>0.0.3</tag>
+  </scm>
 </project>
