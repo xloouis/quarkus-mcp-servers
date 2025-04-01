@@ -8,6 +8,10 @@ These lets you extend the capabilities of your MCP enabled LLM (Large Language M
 These also work in MCP enabled LLM applications, like Claude Desktop. You can find other clients on
 [Awesome MCP Clients](https://github.com/punkpeye/awesome-mcp-clients) page.
 
+## Running the servers
+
+All of these servers are available to run with [jbang everywhere](https://jbang.dev/everywhere): Java, JavaScript, Python and more. Where it says `jbang` it can be replaced with `npx @jbangdev/jbang` or `uvx jbang` or `pipx jbang` dependent on your preference.
+
 ## Servers
 
 ### [jdbc](jdbc)
