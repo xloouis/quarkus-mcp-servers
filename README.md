@@ -109,7 +109,7 @@ Then run the following command to generate a new server for i.e. jfr:
 ```shell
 mkdir jfr
 cd jfr
-jbang -t mcp jfr
+jbang init -t mcp jfr
 ```
 
 This will create the `jfr` directory with a Hello World MCP server.
