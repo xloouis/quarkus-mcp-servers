@@ -1,39 +1,19 @@
 {
   "catalogs": {},
   "aliases": {
-    "mcp-server-filesystem": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
-      "java": "17+"
-    },
     "filesystem": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-filesystem.jar",
-      "java": "17+"
-    },
-    "mcp-server-jdbc": {
-      "script-ref": "jdbc/.scripts/mcpjdbc.java",
+      "script-ref": "io.quarkiverse.mcp.servers:mcp-server-filesystem:RELEASE@fatjar",
       "java": "17+"
     },
     "jdbc": {
       "script-ref": "jdbc/.scripts/mcpjdbc.java",
       "java": "17+"
     },
-    "mcp-server-jfx-script": {
-      "script-ref": "jfx/src/main/java/io/quarkiverse/mcp/servers/jfx/MCPServerJFX.java"
-    },
     "jfx-script": {
-      "script-ref": "jfx/src/main/java/io/quarkiverse/mcp/servers/jfx/MCPServerJFX.java"
-    },
-    "mcp-server-jfx": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-jfx.jar",
-      "dependencies": [
-        "org.openjfx:javafx-controls:21",
-        "org.openjfx:javafx-graphics:21",
-        "org.openjfx:javafx-swing:21"
-      ],
-      "java": "17+"
+      "script-ref": "jfx/src/main/java/io/quarkiverse/mcp/servers/jfx/MCPServerJFX.java@fatjar"
     },
     "jfx": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-jfx.jar",
+      "script-ref": "io.quarkiverse.mcp.servers:mcp-server-jfx:RELEASE@fatjar",
       "dependencies": [
         "org.openjfx:javafx-controls:21",
         "org.openjfx:javafx-graphics:21",
@@ -42,15 +22,15 @@
       "java": "17+"
     },
     "kubernetes": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-kubernetes.jar",
+      "script-ref": "io.quarkiverse.mcp.servers:mcp-server-kubernetes:RELEASE@fatjar",
       "java": "17+"
     },
     "containers": {
-      "script-ref": "https://github.com/quarkiverse/quarkus-mcp-servers/releases/download/early-access/mcp-server-containers.jar",
+      "script-ref": "io.quarkiverse.mcp.servers:mcp-server-containers:RELEASE@fatjar",
       "java": "17+"
     },
     "jvminsight": {
-      "script-ref": "io.quarkus.mcp.servers:mcp-server-jvminsight:RELEASE",
+      "script-ref": "io.quarkiverse.mcp.servers:mcp-server-jvminsight:RELEASE@fatjar",
       "java": "17+"
     }
   },
