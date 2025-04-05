@@ -10,7 +10,7 @@
       "java": "17+"
     },
     "jfx-script": {
-      "script-ref": "jfx/src/main/java/io/quarkiverse/mcp/servers/jfx/MCPServerJFX.java@fatjar"
+      "script-ref": "jfx/src/main/java/io/quarkiverse/mcp/servers/jfx/MCPServerJFX.java"
     },
     "jfx": {
       "script-ref": "io.quarkiverse.mcp.servers:mcp-server-jfx:RELEASE@fatjar",
