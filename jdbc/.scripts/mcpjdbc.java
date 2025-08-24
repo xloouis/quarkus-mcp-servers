@@ -161,6 +161,7 @@ class jdbc implements Callable<Integer> {
         // https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html
         drivers.put("derby", List.of("org.apache.derby:derby:RELEASE"));
         drivers.put("sqlite", List.of("org.xerial:sqlite-jdbc:RELEASE", "org.slf4j:slf4j-simple:1.7.36"));
+        drivers.put("dm", List.of("com.dameng:DmJdbcDriver18:8.1.3.140"));
         return drivers;
     }
 
@@ -191,6 +192,7 @@ class jdbc implements Callable<Integer> {
         // https://db.apache.org/derby/docs/10.8/devguide/cdevdvlp17453.html
         drivers.put("derby", "org.apache.derby.jdbc.EmbeddedDriver");
         drivers.put("sqlite", "org.sqlite.JDBC");
+        drivers.put("dm", "dm.jdbc.driver.DmDriver");
         return drivers;
     }
 }
